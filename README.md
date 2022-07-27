@@ -35,10 +35,12 @@ You need at least the following packages installed:
 - Ensured that any symbols which were deprecated or changed from the appended build speicfic and statically compiled options are up to date as well as any statically compiled options required to build all of the modules specified to be built are enabled. 
   
 # Install
-If you don't want to install from a package, here's *a* manual way and the way that I often do it myself:
+If you don't want to install from a package, here are the manual steps:
+- *Optional* test the kernel `qemu-system-x86_64 -nographic -serial mon:stdio -kernel arch/x86_64/boot/bzImage -append "console=ttyS0,11520n8"` *requires qemu*
 - copy `arch/x86_64/boot/bzImage` to `/boot` and name it as similarly to your distribution's naming conventions as possible.
 - run `mkinitrd` or `dracut` depending on what tooling is appropriate for your distribution.
 - run `update-bootloader` or `grub2-update` depending on which linux distribution you are using.
+- *Optional* specify the newly created ramdisk to qemu with `-initrd` if desired.
 
 # Customizing the kernel
 This can be done after build step #9, by running `make menuconfig` prior to running `make all`. You may want to just follow the steps first and see if there are any problems asides from the one's you will create if you change any build-specific or statically compiled options that you don't understand. After that, you can start again with step #4 and then try to make customizations after step #9.
