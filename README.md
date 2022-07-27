@@ -36,7 +36,7 @@ You need at least the following packages installed:
   
 # Install
 If you don't want to install from a package, here are the manual steps:
-- *Optional step, requires qemu* Test the kernel `qemu-system-x86_64 -nographic -serial mon:stdio -kernel arch/x86_64/boot/bzImage -append "console=ttyS0,11520n8"`
+- *Optional step, requires qemu* Test the kernel `qemu-system-x86_64 -nographic -kernel arch/x86_64/boot/bzImage -append "console=ttyS0,11520n8"`
 - copy `arch/x86_64/boot/bzImage` to `/boot` and name it as similarly to your distribution's naming conventions as possible.
 - run `mkinitrd` or `dracut` depending on what tooling is appropriate for your distribution.
 - run `update-bootloader` or `grub2-update` depending on which linux distribution you are using.
