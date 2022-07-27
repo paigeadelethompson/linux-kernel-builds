@@ -31,7 +31,7 @@ You need at least the following packages installed:
 ## Recap
 - Starting from step 5 we generated a kernel build configuration that enabled all targets which could be built as a module to be enabled.
 - Created a file that omitted everything except for the module-specific targets and overwrote the kernel build config with it.
-- Concatenated only the build specific options and statically compiled options of the distribution's kernel to the end of the kernel build config.
+- Concatenated only the build specific options and statically compiled options of the distribution's known working kernel config to the end of the kernel build config.
 - Ensured that any symbols which were deprecated or changed from the appended build speicfic and statically compiled options are up to date as well as any statically compiled options required to build all of the modules specified to be built are enabled. 
   
 # Install
