@@ -46,7 +46,7 @@ If you don't want to install from a package such as an rpm or deb, here's a manu
 This can be done after build step #9, by running `make menuconfig` prior to running `make all`. You may want to just follow the steps first and see if there are any problems asides from the one's you will create if you change any build-specific or statically compiled options that you don't understand. After that, you can start again with step #4 and then try to make customizations after step #9.
 
 # Secureboot / IMA / EVM
-- I'm open to suggestions (never been able to get secure boot to work) but luckily it can be done after the kernel is compiled and a few additional tools are required:
+- I'm open to suggestions (I've never been able to get secure boot to work) but luckily it can be done after the kernel is compiled and a few additional tools are required:
 - https://github.com/rhboot/pesign
 - https://github.com/lcp/mokutil
 - certutil / pk12util / openssl
