@@ -12,7 +12,7 @@ You need at least the following packages installed:
 - build-essential (gcc, automake, autoconf) 
 - libncurses development headers (package name depends on your distribution) 
 - mkinitrd, dracut, or mkinitramfs (depends on your distribution)
-- linux-firmware *this is typically a package made available perhaps with this name or another depending on your distribution but it can be manually installed from:* https://github.com/endlessm/linux-firmware
+- linux-firmware *this is typically a package made available perhaps with this name or another depending on your distribution but it can be manually installed from:* https://github.com/endlessm/linux-firmware If you're not aware, kernel modules sometimes retrieve these firmware blobs from a directory in `/lib` when the module is loaded. Also, `mkinitrd` and `dracut` will include some of the firmwares in the ramdisk when it is buitl depending on your distribution's specific configuration and hardware requirements.
 
 # Build steps
 1. `git clone https://github.com/torvalds/linux.git /usr/src/linux-git`
