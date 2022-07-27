@@ -32,7 +32,7 @@ You need at least the following packages installed:
 - Starting from step 5 we generated a kernel build configuration that enabled all targets which could be built as a module to be enabled.
 - Created a file that omitted everything except for the module-specific targets and overwrote the kernel build config with it.
 - Concatenated only the build specific options and statically compiled options of the distribution's known working kernel config to the end of the kernel build config.
-- Ensured that any symbols which were deprecated or changed from the appended build speicfic and statically compiled options are up to date as well as any statically compiled options required to build all of the modules specified to be built are enabled. 
+- Ensured that any symbols which were deprecated or changed from the appended build specific and statically compiled options are up to date as well as any statically compiled options required to build all of the modules specified to be built are enabled. This is the job of `makeolddefconfig` as well as removing duplicate symbols; the last option will be given preference.
   
 # Install
 If you don't want to install from a package such as an rpm or deb, here's a manual strategy:
