@@ -46,3 +46,4 @@ This can be done after build step #9, by running `make menuconfig` prior to runn
 # Don't panic 
 Whatever problem you're having is not impossible to solve: 
 - `console=ttyS0,115200n8 console=tty0` and get a serial cable, or use a VM's serial port.  
+- Feel free to open an issue on this repository and I'll be glad to try and help you
