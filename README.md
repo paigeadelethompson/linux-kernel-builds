@@ -50,5 +50,5 @@ Whatever problem you're having is not impossible to solve:
 - `console=ttyS0,115200n8 console=tty0` and get a serial cable, or use a VM's serial port, if you can't get video to troubleshoot
 - Feel free to open an issue on this repository and I'll be glad to try and help you
 
-# Secureboot? 
-- I'm open to suggestions on this myself
+# Secureboot / IMA / EVM
+- I'm open to suggestions on how to trivialize this myself
