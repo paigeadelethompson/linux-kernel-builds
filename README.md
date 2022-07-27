@@ -49,7 +49,7 @@ This can be done after build step #9, by running `make menuconfig` prior to runn
 - I'm open to suggestions (never been able to get it to work) and a few additional tools are required:
 - https://github.com/rhboot/pesign
 - https://github.com/lcp/mokutil
-- openssl for creating certificates
+- certutil / pk12util / openssl
   
 # Don't panic 
 Whatever problem you're having is not impossible to solve: 
