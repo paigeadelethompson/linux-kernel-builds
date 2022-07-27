@@ -34,4 +34,4 @@ If you don't want to install from a package, here's *a* manual way and the way t
 - run `update-bootloader` or `grub2-update` depending on which linux distribution you are using.
 
 # Customizing the kernel
-This can be done after build step #9, by running `make menuconfig` prior to running `make all`
+This can be done after build step #9, by running `make menuconfig` prior to running `make all`. You may want to just follow the steps first and see if there are any problems asides from the one's you will create if you change any build-specific or statically compiled options that you don't understand. After that, you can start again with step #4 and then try to make customizations after step #9.
