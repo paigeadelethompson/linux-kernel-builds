@@ -18,7 +18,7 @@ You need at least the following packages installed:
 1. `git clone https://github.com/torvalds/linux.git /usr/src/linux-git`
 2. `mv /usr/src/linux /usr/src/linux-old`
 3. `ln -s /usr/src/linux-git /usr/src/linux`
-4. `make mrproper && make clean`
+4. `cd /usr/src/linux && make mrproper && make clean`
 5. `make allmodconfig`
 6. `cat .config | grep "=m" > allmodconfig`
 7. `mv allmodconfig .config`
@@ -27,6 +27,13 @@ You need at least the following packages installed:
 9. `make olddefconfig`
 10. `make -j<nprocs> all` *replace <nprocs> with just the number of processors/cores/threads that you have to speed up the build as much as possible.*
 
+
+## Recap
+- Starting from step 5 we generated a kernel build configuration that enabled all targets which could be built as a module to be enabled.
+- Created a file that omitted everything except for the module-specific targets and overwrote the kernel build config with it.
+- Concatenated only the build specific options and statically compiled options of the distribution's kernel to the end of the kernel build config.
+- Ensured that any symbols which were deprecated or changed from the appended build speicfic and statically compiled options are up to date as well as any statically compiled options required to build all of the modules specified to be built are enabled. 
+  
 # Install
 If you don't want to install from a package, here's *a* manual way and the way that I often do it myself:
 - copy `arch/x86_64/boot/bzImage` to `/boot` and name it as similarly to your distribution's naming conventions as possible.
@@ -35,3 +42,7 @@ If you don't want to install from a package, here's *a* manual way and the way t
 
 # Customizing the kernel
 This can be done after build step #9, by running `make menuconfig` prior to running `make all`. You may want to just follow the steps first and see if there are any problems asides from the one's you will create if you change any build-specific or statically compiled options that you don't understand. After that, you can start again with step #4 and then try to make customizations after step #9.
+
+# Don't panic 
+Whatever problem you're having is not impossible to solve: 
+- `console=ttyS0,115200n8 console=tty0` and get a serial cable, or use a VM's serial port.  
