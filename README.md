@@ -35,7 +35,7 @@ You need at least the following packages installed:
 - Ensured that any symbols which were deprecated or changed from the appended build speicfic and statically compiled options are up to date as well as any statically compiled options required to build all of the modules specified to be built are enabled. 
   
 # Install
-If you don't want to install from a package, here are the manual steps:
+If you don't want to install from a package such as an rpm or deb, here's a manual strategy:
 - *Optional step, requires qemu* Test the kernel `qemu-system-x86_64 -nographic -kernel arch/x86_64/boot/bzImage -append "console=ttyS0,11520n8"`
 - copy `arch/x86_64/boot/bzImage` to `/boot` and name it as similarly to your distribution's naming conventions as possible.
 - run `mkinitrd` or `dracut` depending on what tooling is appropriate for your distribution.
