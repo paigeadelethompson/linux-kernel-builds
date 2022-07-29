@@ -16,7 +16,7 @@ You need at least the following packages installed:
 
 # Build steps
 1. `git clone https://github.com/torvalds/linux.git /usr/src/linux-git`
-2. `mv /usr/src/linux /usr/src/linux-old`
+2. `mv -f /usr/src/linux /usr/src/linux-old`
 3. `ln -s /usr/src/linux-git /usr/src/linux`
 4. `cd /usr/src/linux && make mrproper && make clean`
 5. `make allmodconfig`
