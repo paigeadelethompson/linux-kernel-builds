@@ -24,7 +24,7 @@ jobs:
     - name: allmodconfig
       working-directory: ./linux
       run: make allmodconfig
-    - name: greponlymods
+    - name: grep-only-mods
       working-directory: ./linux
       run: cat .config | grep "=m" > allmodconfig
     - name: writeconfig 
@@ -36,12 +36,24 @@ jobs:
     - name: install generic kernel
       working-directory: ./linux
       run: sudo apt-get install -y linux-image-generic libelf-dev
-    - name: defaultconfigoptions
+    - name: default-config-options
       working-directory: ./linux
       run: ls /boot/config-* | head -n 1 | xargs -i cat {} | grep -v "CONFIG_SYSTEM_TRUSTED_KEYS" | grep -v "CONFIG_SYSTEM_REVOCATION_KEYS" | grep -v "=m" | grep -v "#" | grep "." >> .config
     - name: olddefconfig
       working-directory: ./linux
       run: make olddefconfig
-    - name: makeall
+    - name: make-all
       working-directory: ./linux
-      run: make all
+      run: sudo make all
+    - name: make-tarzst
+      working-directory: ./linux
+      run: sudo make tarzst-pkg
+    - name: make-rpm
+      working-directory: ./linux
+      run: sudo make rpm-pkg
+    - name: make-deb
+      working-directory: ./linux
+      run: sudo make deb-pkg
+    - name: make-snap
+      working-directory: ./linux
+      run: sudo make snap-pkg
