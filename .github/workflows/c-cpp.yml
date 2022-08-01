@@ -1,0 +1,39 @@
+name: build kernel
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        submodules: true
+    - name: srcdir
+      run: mv -f /usr/src/linux /usr/src/linux-old
+    - name: srcdir link
+      run: ln -s ./linux /usr/src/linux
+    - name: cd
+      run: cd linux/
+    - name: mrproper
+      run: make mrproper
+    - name: clean
+      run: make clean
+    - name: allmodconfig
+      run: make allmodconfig
+    - name: greponlymods
+      run: cat .config | grep "=m" > allmodconfig
+    - name: writeconfig 
+      run: mv allmodconfig .config
+    - name: currentconfigoptions
+      run: zcat /proc/config.gz | grep -v "=m" | grep -v "#" | grep "." >> .config
+    - name: olddefconfig
+      run: make olddefconfig
+    - name: makeall
+      run: make all
