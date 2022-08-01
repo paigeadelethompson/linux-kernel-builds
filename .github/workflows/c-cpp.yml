@@ -15,8 +15,6 @@ jobs:
     - uses: actions/checkout@v3
       with:
         submodules: true
-    - name: srcdir
-      run: mv -f /usr/src/linux /usr/src/linux-old
     - name: srcdir link
       run: ln -s ./linux /usr/src/linux
     - name: cd
