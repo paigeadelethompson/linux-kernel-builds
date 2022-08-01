@@ -30,6 +30,9 @@ jobs:
     - name: writeconfig 
       working-directory: ./linux
       run: mv allmodconfig .config
+    - name: update apt sources
+      working-directory: ./linux
+      run: sudo apt-get update
     - name: install generic kernel
       working-directory: ./linux
       run: sudo apt-get install -y linux-image-generic
