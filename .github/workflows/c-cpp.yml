@@ -30,9 +30,12 @@ jobs:
     - name: writeconfig 
       working-directory: ./linux
       run: mv allmodconfig .config
-    - name: currentconfigoptions
+    - name: install generic kernel
       working-directory: ./linux
-      run: zcat /proc/config.gz | grep -v "=m" | grep -v "#" | grep "." >> .config
+      run: sudo apt-get install -y linux-image-generic
+    - name: defaultconfigoptions
+      working-directory: ./linux
+      run: cat /boot/config-* | grep -v "=m" | grep -v "#" | grep "." >> .config
     - name: olddefconfig
       working-directory: ./linux
       run: make olddefconfig
