@@ -35,10 +35,10 @@ jobs:
       run: sudo apt-get update
     - name: install generic kernel
       working-directory: ./linux
-      run: sudo apt-get install -y linux-image-generic
+      run: sudo apt-get install -y linux-image-generic libelf-dev
     - name: defaultconfigoptions
       working-directory: ./linux
-      run: cat /boot/config-* | grep -v "=m" | grep -v "#" | grep "." >> .config
+      run: ls /boot/config-* | head -n 1 | xargs -i cat {} | grep -v "=m" | grep -v "#" | grep "." >> .config
     - name: olddefconfig
       working-directory: ./linux
       run: make olddefconfig
