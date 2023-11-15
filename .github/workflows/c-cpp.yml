@@ -19,19 +19,22 @@ jobs:
     - name: Get current date
       id: date
       run: echo "stamp=$(date '+%s')" >> $GITHUB_ENV
-    - name: mrproper
+    - name: Update
+      working-directory: ./linux
+      run: git pull origin master
+    - name: Make mrproper
       working-directory: ./linux
       run: make mrproper
-    - name: clean
+    - name: Make clean
       working-directory: ./linux
       run: make V=1 arch=x86_64 clean
-    - name: allmodconfig
+    - name: Make allmodconfig
       working-directory: ./linux
       run: make V=1 arch=x86_64 allmodconfig
-    - name: grep-only-mods
+    - name: Collect module names
       working-directory: ./linux
       run: cat .config | grep "=m" > allmodconfig
-    - name: writeconfig 
+    - name: Create config 
       working-directory: ./linux
       run: mv allmodconfig .config
     - name: update apt sources
