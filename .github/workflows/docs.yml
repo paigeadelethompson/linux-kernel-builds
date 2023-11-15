@@ -1,4 +1,4 @@
-name: build kernel
+name: build kernel docs
 
 on:
   push:
