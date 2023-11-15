@@ -5,25 +5,29 @@ on:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
-
+  workflow_dispatch:
+  
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v3
       with:
         submodules: true
+    - name: Enable ccache
+      uses: hendrikmuhs/ccache-action@v1.2
+    - name: Get current date
+      id: date
+      run: echo "stamp=$(date '+%s')" >> $GITHUB_ENV
     - name: mrproper
       working-directory: ./linux
       run: make mrproper
     - name: clean
       working-directory: ./linux
-      run: make clean
+      run: make V=1 arch=x86_64 clean
     - name: allmodconfig
       working-directory: ./linux
-      run: make allmodconfig
+      run: make V=1 arch=x86_64 allmodconfig
     - name: grep-only-mods
       working-directory: ./linux
       run: cat .config | grep "=m" > allmodconfig
@@ -41,19 +45,38 @@ jobs:
       run: ls /boot/config-* | head -n 1 | xargs -i cat {} | grep -v "CONFIG_SYSTEM_TRUSTED_KEYS" | grep -v "CONFIG_SYSTEM_REVOCATION_KEYS" | grep -v "=m" | grep -v "#" | grep "." >> .config
     - name: olddefconfig
       working-directory: ./linux
-      run: make olddefconfig
+      run: make V=1 arch=x86_64 olddefconfig
     - name: make-all
       working-directory: ./linux
-      run: sudo make all
+      run: sudo make V=1 arch=x86_64 all
     - name: make-tarzst
       working-directory: ./linux
-      run: sudo make tarzst-pkg
+      run: sudo make V=1 arch=x86_64 tarzst-pkg
     - name: make-rpm
       working-directory: ./linux
-      run: sudo make rpm-pkg
+      run: sudo make V=1 arch=x86_64 rpm-pkg
     - name: make-deb
       working-directory: ./linux
-      run: sudo make deb-pkg
+      run: sudo make V=1 arch=x86_64 deb-pkg
     - name: make-snap
       working-directory: ./linux
-      run: sudo make snap-pkg
+      run: sudo make V=1 arch=x86_64 snap-pkg
+    - name: Create GH release
+      uses: actions/create-release@v1
+      id: create_release
+      with:
+        draft: true
+        prerelease: false
+        release_name: linux-${{ env.stamp }}
+        tag_name: linux-${{ env.stamp }}
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+    - name: Upload artifacts to release draft
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: linux-${{ env.stamp }}.rpm
+        asset_name: linux-${{ env.stamp }}.rpm
+        asset_content_type: application/rpm
