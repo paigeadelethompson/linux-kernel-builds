@@ -80,6 +80,6 @@ jobs:
         GITHUB_TOKEN: ${{ github.token }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: arch/x86_64/linux-${{ env.version }}.rpm
+        asset_path: arch/x86_64/linux-${{ env.CONFIG_BUILD_SALT }}+.rpm
         asset_name: linux-${{ env.stamp }}.rpm
         asset_content_type: application/rpm
