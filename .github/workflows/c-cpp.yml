@@ -14,14 +14,14 @@ jobs:
     - uses: actions/checkout@v3
       with:
         submodules: true
+    - name: Update
+      working-directory: ./linux
+      run: git checkout -b master ; git pull origin master
     - name: Enable ccache
       uses: hendrikmuhs/ccache-action@v1.2
     - name: Get current date
       id: date
       run: echo "stamp=$(date '+%s')" >> $GITHUB_ENV
-    - name: Update
-      working-directory: ./linux
-      run: git pull origin master
     - name: Make mrproper
       working-directory: ./linux
       run: make mrproper
