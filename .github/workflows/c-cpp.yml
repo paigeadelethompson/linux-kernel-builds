@@ -24,13 +24,13 @@ jobs:
       run: echo "stamp=$(date '+%s')" >> $GITHUB_ENV
     - name: Make mrproper
       working-directory: ./linux
-      run: make V=1 arch=x86_64 CC="ccache gcc" mrproper
+      run: make V=1 arch=x86_64 mrproper
     - name: Make clean
       working-directory: ./linux
-      run: make V=2 arch=x86_64 CC="ccache gcc" clean
+      run: make V=2 arch=x86_64 clean
     - name: Make allmodconfig
       working-directory: ./linux
-      run: make V=2 arch=x86_64 CC="ccache gcc" allmodconfig
+      run: make V=2 arch=x86_64 allmodconfig
     - name: Collect module names
       working-directory: ./linux
       run: cat .config | grep "=m" > allmodconfig
@@ -48,26 +48,26 @@ jobs:
       run: ls /boot/config-* | head -n 1 | xargs -i cat {} | grep -v "CONFIG_SYSTEM_TRUSTED_KEYS" | grep -v "CONFIG_SYSTEM_REVOCATION_KEYS" | grep -v "=m" | grep -v "#" | grep "." >> .config
     - name: olddefconfig
       working-directory: ./linux
-      run: make V=2 arch=x86_64 CC="ccache gcc" olddefconfig
+      run: make V=2 arch=x86_64 olddefconfig
     - name: Get kernel version string
       working-directory: ./linux
       id: version
       run: echo "kernel_version=$(make kernelversion)" >> $GITHUB_ENV
     - name: make-all
       working-directory: ./linux
-      run: sudo make V=2 arch=x86_64 CC="ccache gcc" all
+      run: sudo make V=2 arch=x86_64 all
     - name: make-tarzst
       working-directory: ./linux
-      run: sudo make V=2 arch=x86_64 CC="ccache gcc" tarzst-pkg
+      run: sudo make V=2 arch=x86_64 tarzst-pkg
     - name: make-rpm
       working-directory: ./linux
-      run: sudo make V=2 arch=x86_64 CC="ccache gcc" rpm-pkg
+      run: sudo make V=2 arch=x86_64 rpm-pkg
     - name: make-deb
       working-directory: ./linux
-      run: sudo make V=2 arch=x86_64 CC="ccache gcc" deb-pkg
+      run: sudo make V=2 arch=x86_64 deb-pkg
     - name: make-snap
       working-directory: ./linux
-      run: sudo make V=2 arch=x86_64 CC="ccache gcc" snap-pkg
+      run: sudo make V=2 arch=x86_64 snap-pkg
     - name: Create GH release
       uses: actions/create-release@v1
       id: create_release
