@@ -26,7 +26,7 @@ jobs:
     - name: Get kernel version string
       working-directory: ./linux
       id: version
-      run: echo "kernel_version=$(make kernelversion)" >> $GITHUB_ENV
+      run: echo "kernel_version=$(make kernelrelease)" >> $GITHUB_ENV
     - name: Get current date
       id: date
       run: echo "stamp=$(date '+%s')" >> $GITHUB_ENV
@@ -50,6 +50,7 @@ jobs:
         make allmodconfig
         scripts/config -e CONFIG_HZ_1000
         scripts/config -e CONFIG_PREEMPT
+        scripts/config -d CONFIG_FW_CFG_SYSFS
         scripts/config -d CONFIG_CGROUP_DEBUG
         scripts/config -d CONFIG_DEBUG_RSEQ
         scripts/config -d CONFIG_DEBUG_PERF_USE_VMALLOC
@@ -376,12 +377,212 @@ jobs:
         scripts/config -d CONFIG_FAULT_INJECTION_DEBUG_FS
         scripts/config -d CONFIG_TEST_DYNAMIC_DEBUG
         scripts/config -d CONFIG_TEST_DEBUG_VIRTUAL
+        scripts/config -d CONFIG_COMPILE_TEST
+        scripts/config -d CONFIG_UAPI_HEADER_TEST
+        scripts/config -d CONFIG_TIME_KUNIT_TEST
+        scripts/config -d CONFIG_KALLSYMS_SELFTEST
+        scripts/config -d CONFIG_STATIC_KEYS_SELFTEST
+        scripts/config -d CONFIG_STATIC_CALL_SELFTEST
+        scripts/config -d CONFIG_GUP_TEST
+        scripts/config -d CONFIG_DMAPOOL_TEST
+        scripts/config -d CONFIG_NET_HANDSHAKE_KUNIT_TEST
+        scripts/config -d CONFIG_MPTCP_KUNIT_TEST
+        scripts/config -d CONFIG_BT_SELFTEST
+        scripts/config -d CONFIG_BT_SELFTEST_ECDH
+        scripts/config -d CONFIG_BT_SELFTEST_SMP
+        scripts/config -d CONFIG_NL80211_TESTMODE
+        scripts/config -d CONFIG_CFG80211_KUNIT_TEST
+        scripts/config -d CONFIG_MAC80211_KUNIT_TEST
+        scripts/config -d CONFIG_NET_SELFTESTS
+        scripts/config -d CONFIG_NETDEV_ADDR_LIST_TEST
+        scripts/config -d CONFIG_NET_TEST
+        scripts/config -d CONFIG_PCI_EPF_TEST
+        scripts/config -d CONFIG_CXL_REGION_INVALIDATION_TEST
+        scripts/config -d CONFIG_TEST_ASYNC_DRIVER_PROBE
+        scripts/config -d CONFIG_DM_KUNIT_TEST
+        scripts/config -d CONFIG_DRIVER_PE_KUNIT_TEST
+        scripts/config -d CONFIG_EFI_TEST
+        scripts/config -d CONFIG_MTD_TESTS
+        scripts/config -d CONFIG_OF_UNITTEST
+        scripts/config -d CONFIG_PCI_ENDPOINT_TEST
+        scripts/config -d CONFIG_FIREWIRE_KUNIT_UAPI_TEST
+        scripts/config -d CONFIG_TSNEP_SELFTESTS
+        scripts/config -d CONFIG_STMMAC_SELFTESTS
+        scripts/config -d CONFIG_ATH_REG_DYNAMIC_USER_CERT_TESTING
+        scripts/config -d CONFIG_ATH5K_TEST_CHANNELS
+        scripts/config -d CONFIG_RTL8XXXU_UNTESTED
+        scripts/config -d CONFIG_INPUT_KUNIT_TEST
+        scripts/config -d CONFIG_I2C_SLAVE_TESTUNIT
+        scripts/config -d CONFIG_SPI_LOOPBACK_TEST
+        scripts/config -d CONFIG_TEST_POWER
+        scripts/config -d CONFIG_MEDIA_TEST_SUPPORT
+        scripts/config -d CONFIG_V4L_TEST_DRIVERS
+        scripts/config -d CONFIG_DVB_TEST_DRIVERS
+        scripts/config -d CONFIG_DRM_KUNIT_TEST_HELPERS
+        scripts/config -d CONFIG_DRM_KUNIT_TEST
+        scripts/config -d CONFIG_DRM_TTM_KUNIT_TEST
+        scripts/config -d CONFIG_DRM_I915_SELFTEST
+        scripts/config -d CONFIG_DRM_VC4_KUNIT_TEST
+        scripts/config -d CONFIG_DRM_EXPORT_FOR_TESTS
+        scripts/config -d CONFIG_SND_PCMTEST
+        scripts/config -d CONFIG_SND_HDA_CIRRUS_SCODEC_KUNIT_TEST
+        scripts/config -d CONFIG_SND_SOC_TOPOLOGY_KUNIT_TEST
+        scripts/config -d CONFIG_SND_SOC_UTILS_KUNIT_TEST
+        scripts/config -d CONFIG_SND_SOC_INTEL_AVS_MACH_I2S_TEST
+        scripts/config -d CONFIG_SND_TEST_COMPONENT
+        scripts/config -d CONFIG_HID_KUNIT_TEST
+        scripts/config -d CONFIG_USB_HCD_TEST_MODE
+        scripts/config -d CONFIG_USB_TEST
+        scripts/config -d CONFIG_USB_EHSET_TEST_FIXTURE
+        scripts/config -d CONFIG_USB_LINK_LAYER_TEST
+        scripts/config -d CONFIG_USB_ZERO_HNPTEST
+        scripts/config -d CONFIG_MMC_TEST
+        scripts/config -d CONFIG_MMC_SDHCI_OF_ASPEED_TEST
+        scripts/config -d CONFIG_RTC_LIB_KUNIT_TEST
+        scripts/config -d CONFIG_RTC_DRV_TEST
+        scripts/config -d CONFIG_DMATEST
+        scripts/config -d CONFIG_DMABUF_SELFTESTS
+        scripts/config -d CONFIG_COMEDI_TEST
+        scripts/config -d CONFIG_COMEDI_TESTS
+        scripts/config -d CONFIG_COMEDI_TESTS_EXAMPLE
+        scripts/config -d CONFIG_COMEDI_TESTS_NI_ROUTES
+        scripts/config -d CONFIG_CROS_KUNIT_EC_PROTO_TEST
+        scripts/config -d CONFIG_CLK_KUNIT_TEST
+        scripts/config -d CONFIG_CLK_GATE_KUNIT_TEST
+        scripts/config -d CONFIG_CLK_FD_KUNIT_TEST
+        scripts/config -d CONFIG_MAILBOX_TEST
+        scripts/config -d CONFIG_IOMMU_IO_PGTABLE_LPAE_SELFTEST
+        scripts/config -d CONFIG_IOMMU_IO_PGTABLE_ARMV7S_SELFTEST
+        scripts/config -d CONFIG_IOMMUFD_TEST
+        scripts/config -d CONFIG_IIO_RESCALE_KUNIT_TEST
+        scripts/config -d CONFIG_IIO_FORMAT_KUNIT_TEST
+        scripts/config -d CONFIG_NTB_MSI_TEST
+        scripts/config -d CONFIG_USB4_DMA_TEST
+        scripts/config -d CONFIG_ANDROID_BINDER_IPC_SELFTEST
+        scripts/config -d CONFIG_NVDIMM_TEST_BUILD
+        scripts/config -d CONFIG_NVDIMM_SECURITY_TEST
+        scripts/config -d CONFIG_HTE_TEGRA194_TEST
+        scripts/config -d CONFIG_EXT4_KUNIT_TESTS
+        scripts/config -d CONFIG_BTRFS_FS_RUN_SANITY_TESTS
+        scripts/config -d CONFIG_BCACHEFS_TESTS
+        scripts/config -d CONFIG_MEAN_AND_VARIANCE_UNIT_TEST
+        scripts/config -d CONFIG_FAT_KUNIT_TEST
+        scripts/config -d CONFIG_RPCSEC_GSS_KRB5_KUNIT_TEST
+        scripts/config -d CONFIG_UNICODE_NORMALIZATION_SELFTEST
+        scripts/config -d CONFIG_SECURITY_APPARMOR_KUNIT_TEST
+        scripts/config -d CONFIG_CRYPTO_MANAGER_DISABLE_TESTS
+        scripts/config -d CONFIG_CRYPTO_TEST
+        scripts/config -d CONFIG_PKCS7_TEST_KEY
+        scripts/config -d CONFIG_FIPS_SIGNATURE_SELFTEST
+        scripts/config -d CONFIG_CRC32_SELFTEST
+        scripts/config -d CONFIG_RANDOM32_SELFTEST
+        scripts/config -d CONFIG_XZ_DEC_TEST
+        scripts/config -d CONFIG_GLOB_SELFTEST
+        scripts/config -d CONFIG_LWQ_TEST
+        scripts/config -d CONFIG_KGDB_TESTS
+        scripts/config -d CONFIG_KGDB_TESTS_ON_BOOT
+        scripts/config -d CONFIG_KGDB_TESTS_BOOT_STRING
+        scripts/config -d CONFIG_TEST_UBSAN
+        scripts/config -d CONFIG_KCSAN_SELFTEST
+        scripts/config -d CONFIG_KCSAN_KUNIT_TEST
+        scripts/config -d CONFIG_KFENCE_STRESS_TEST_FAULTS
+        scripts/config -d CONFIG_KFENCE_KUNIT_TEST
+        scripts/config -d CONFIG_TEST_LOCKUP
+        scripts/config -d CONFIG_LOCK_TORTURE_TEST
+        scripts/config -d CONFIG_WW_MUTEX_SELFTEST
+        scripts/config -d CONFIG_SCF_TORTURE_TEST
+        scripts/config -d CONFIG_TORTURE_TEST
+        scripts/config -d CONFIG_RCU_SCALE_TEST
+        scripts/config -d CONFIG_RCU_TORTURE_TEST
+        scripts/config -d CONFIG_RCU_REF_SCALE_TEST
+        scripts/config -d CONFIG_FTRACE_SELFTEST
+        scripts/config -d CONFIG_FTRACE_STARTUP_TEST
+        scripts/config -d CONFIG_EVENT_TRACE_STARTUP_TEST
+        scripts/config -d CONFIG_EVENT_TRACE_TEST_SYSCALLS
+        scripts/config -d CONFIG_FTRACE_SORT_STARTUP_TEST
+        scripts/config -d CONFIG_RING_BUFFER_STARTUP_TEST
+        scripts/config -d CONFIG_MMIOTRACE_TEST
+        scripts/config -d CONFIG_PREEMPTIRQ_DELAY_TEST
+        scripts/config -d CONFIG_SYNTH_EVENT_GEN_TEST
+        scripts/config -d CONFIG_KPROBE_EVENT_GEN_TEST
+        scripts/config -d CONFIG_KUNIT_TEST
+        scripts/config -d CONFIG_KUNIT_EXAMPLE_TEST
+        scripts/config -d CONFIG_KUNIT_ALL_TESTS
+        scripts/config -d CONFIG_RUNTIME_TESTING_MENU
+        scripts/config -d CONFIG_TEST_DHRY
+        scripts/config -d CONFIG_CPUMASK_KUNIT_TEST
+        scripts/config -d CONFIG_TEST_LIST_SORT
+        scripts/config -d CONFIG_TEST_MIN_HEAP
+        scripts/config -d CONFIG_TEST_SORT
+        scripts/config -d CONFIG_TEST_DIV64
+        scripts/config -d CONFIG_TEST_IOV_ITER
+        scripts/config -d CONFIG_KPROBES_SANITY_TEST
+        scripts/config -d CONFIG_BACKTRACE_SELF_TEST
+        scripts/config -d CONFIG_TEST_REF_TRACKER
+        scripts/config -d CONFIG_RBTREE_TEST
+        scripts/config -d CONFIG_REED_SOLOMON_TEST
+        scripts/config -d CONFIG_INTERVAL_TREE_TEST
+        scripts/config -d CONFIG_PERCPU_TEST
+        scripts/config -d CONFIG_ATOMIC64_SELFTEST
+        scripts/config -d CONFIG_ASYNC_RAID6_TEST
+        scripts/config -d CONFIG_TEST_HEXDUMP
+        scripts/config -d CONFIG_STRING_SELFTEST
+        scripts/config -d CONFIG_TEST_STRING_HELPERS
+        scripts/config -d CONFIG_TEST_KSTRTOX
+        scripts/config -d CONFIG_TEST_PRINTF
+        scripts/config -d CONFIG_TEST_SCANF
+        scripts/config -d CONFIG_TEST_BITMAP
+        scripts/config -d CONFIG_TEST_UUID
+        scripts/config -d CONFIG_TEST_XARRAY
+        scripts/config -d CONFIG_TEST_MAPLE_TREE
+        scripts/config -d CONFIG_TEST_RHASHTABLE
+        scripts/config -d CONFIG_TEST_IDA
+        scripts/config -d CONFIG_TEST_PARMAN
+        scripts/config -d CONFIG_TEST_LKM
+        scripts/config -d CONFIG_TEST_BITOPS
+        scripts/config -d CONFIG_TEST_VMALLOC
+        scripts/config -d CONFIG_TEST_USER_COPY
+        scripts/config -d CONFIG_TEST_BPF
+        scripts/config -d CONFIG_TEST_BLACKHOLE_DEV
+        scripts/config -d CONFIG_TEST_FIRMWARE
+        scripts/config -d CONFIG_TEST_SYSCTL
+        scripts/config -d CONFIG_HASH_KUNIT_TEST
+        scripts/config -d CONFIG_RESOURCE_KUNIT_TEST
+        scripts/config -d CONFIG_SYSCTL_KUNIT_TEST
+        scripts/config -d CONFIG_LIST_KUNIT_TEST
+        scripts/config -d CONFIG_HASHTABLE_KUNIT_TEST
+        scripts/config -d CONFIG_LINEAR_RANGES_TEST
+        scripts/config -d CONFIG_CMDLINE_KUNIT_TEST
+        scripts/config -d CONFIG_BITS_TEST
+        scripts/config -d CONFIG_RATIONAL_KUNIT_TEST
+        scripts/config -d CONFIG_MEMCPY_KUNIT_TEST
+        scripts/config -d CONFIG_MEMCPY_SLOW_KUNIT_TEST
+        scripts/config -d CONFIG_IS_SIGNED_TYPE_KUNIT_TEST
+        scripts/config -d CONFIG_OVERFLOW_KUNIT_TEST
+        scripts/config -d CONFIG_STACKINIT_KUNIT_TEST
+        scripts/config -d CONFIG_FORTIFY_KUNIT_TEST
+        scripts/config -d CONFIG_STRCAT_KUNIT_TEST
+        scripts/config -d CONFIG_STRSCPY_KUNIT_TEST
+        scripts/config -d CONFIG_SIPHASH_KUNIT_TEST
+        scripts/config -d CONFIG_TEST_UDELAY
+        scripts/config -d CONFIG_TEST_STATIC_KEYS
+        scripts/config -d CONFIG_TEST_KMOD
+        scripts/config -d CONFIG_TEST_MEMCAT_P
+        scripts/config -d CONFIG_TEST_OBJAGG
+        scripts/config -d CONFIG_TEST_MEMINIT
+        scripts/config -d CONFIG_TEST_HMM
+        scripts/config -d CONFIG_TEST_FREE_PAGES
+        scripts/config -d CONFIG_TEST_CLOCKSOURCE_WATCHDOG
+        scripts/config -d CONFIG_TEST_OBJPOOL
+        scripts/config -d CONFIG_ARCH_USE_MEMTEST
+        scripts/config -d CONFIG_MEMTEST
+        scripts/config -d CONFIG_HYPERV_TESTING        
     - name: make-all
       working-directory: ./linux
       run: sudo make V=1 all
-    - name: make-rpm
+    - name: Make archives
       working-directory: ./linux
-      run: sudo make V=1 rpm-pkg
+      run: sudo make V=1 rpm-pkg deb-pkg snap-pkg targz-pkg tarbz2-pkg tarxz-pkg tarzst-pkg perf-tar-src-pkg perf-targz-src-pkg perf-tarbz2-src-pkg perf-tarxz-src-pkg perf-tarzst-src-pkg
     - name: Create GH release
       uses: actions/create-release@v1
       id: create_release
@@ -392,12 +593,35 @@ jobs:
         tag_name: linux-${{ env.stamp }}
       env:
         GITHUB_TOKEN: ${{ github.token }}
-    - name: Upload artifacts to release draft
+    - name: Upload src RPM to release draft
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ github.token }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: arch/x86_64/linux-${{ env.kernel_version }}+.rpm
-        asset_name: linux-${{ env.stamp }}.rpm
-        asset_content_type: application/rpm
+        asset_path: linux/rpmbuild/SRPMS/kernel-${{ env.kernel_version }}-2.src.rpm
+        asset_name: kernel-${{ env.kernel_version }}-2.src.rpm
+    - name: Upload headers RPM to release draft
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: linux/linux/rpmbuild/RPMS/x86_64/kernel-headers-${{ env.kernel_version }}-2.x86_64.rpm
+        asset_name: kernel-headers-${{ env.kernel_version }}-2.x86_64.rpm
+    - name: Upload kernel RPM to release draft
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: rpmbuild/RPMS/x86_64/kernel-${{ env.kernel_version }}-2.x86_64.rpm
+        asset_name: kernel-${{ env.kernel_version }}-2.x86_64.rpm
+    - name: Upload devel RPM to release draft
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: rpmbuild/RPMS/x86_64/kernel-devel-${{ env.kernel_version }}-2.x86_64.rpm
+        asset_name: kernel-devel-${{ env.kernel_version }}-2.x86_64.rpm
