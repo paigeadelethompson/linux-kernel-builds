@@ -21,10 +21,6 @@ jobs:
         submodules: true
     - name: Setup ccache
       uses: hendrikmuhs/ccache-action@v1.2
-    - name: Get kernel version string
-      working-directory: ./linux
-      id: version
-      run: echo "kernel_version=$(make kernelrelease)" >> $GITHUB_ENV
     - name: Get current date
       id: date
       run: echo "stamp=$(date '+%s')" >> $GITHUB_ENV
@@ -45,7 +41,6 @@ jobs:
       run: |
         scripts/config -e CONFIG_HZ_1000
         scripts/config -e CONFIG_PREEMPT
-        scripts/config -d CONFIG_KFENCE
         scripts/config -d CONFIG_FW_CFG_SYSFS
         scripts/config -d CONFIG_CGROUP_DEBUG
         scripts/config -d CONFIG_DEBUG_RSEQ
@@ -576,6 +571,10 @@ jobs:
     - name: Make olddefconfig
       working-directory: ./linux
       run: make V=1 CC="ccache gcc" olddefconfig       
+    - name: Get kernel version string
+      working-directory: ./linux
+      id: version
+      run: echo "kernel_version=$(make kernelrelease)" >> $GITHUB_ENV
     - name: Make all
       working-directory: ./linux
       run: make V=1 CC="ccache gcc" all
