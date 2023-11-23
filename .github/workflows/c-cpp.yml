@@ -45,6 +45,7 @@ jobs:
       run: |
         scripts/config -e CONFIG_HZ_1000
         scripts/config -e CONFIG_PREEMPT
+        scripts/config -d CONFIG_KFENCE
         scripts/config -d CONFIG_FW_CFG_SYSFS
         scripts/config -d CONFIG_CGROUP_DEBUG
         scripts/config -d CONFIG_DEBUG_RSEQ
@@ -580,7 +581,7 @@ jobs:
       run: make V=1 CC="ccache gcc" all
     - name: Make archives
       working-directory: ./linux
-      run: make V=1 CC="ccache gcc" rpm-pkg deb-pkg snap-pkg targz-pkg tarbz2-pkg tarxz-pkg tarzst-pkg perf-tar-src-pkg perf-targz-src-pkg perf-tarbz2-src-pkg perf-tarxz-src-pkg perf-tarzst-src-pkg
+      run: make V=1 CC="ccache gcc" rpm-pkg deb-pkg targz-pkg tarbz2-pkg tarxz-pkg tarzst-pkg perf-tar-src-pkg perf-targz-src-pkg perf-tarbz2-src-pkg perf-tarxz-src-pkg perf-tarzst-src-pkg
     - name: Create GH release
       uses: actions/create-release@v1
       id: create_release
