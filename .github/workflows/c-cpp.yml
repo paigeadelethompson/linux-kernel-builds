@@ -11,11 +11,17 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+    - name: APT update sources
+      working-directory: ./linux
+      run: sudo apt-get update
+    - name: APT install packages
+      working-directory: ./linux
+      run: sudo apt-get install -y linux-image-generic libelf-dev build-essential ccache
     - uses: actions/checkout@v3
       with:
         ref: ${{ env.GITVER_CHECKOUT }}
         submodules: true
-    - name: Enable ccache
+    - name: Setup ccache
       uses: hendrikmuhs/ccache-action@v1.2
     - name: Get kernel version string
       working-directory: ./linux
@@ -33,12 +39,6 @@ jobs:
     - name: Make allmodconfig
       working-directory: ./linux
       run: make V=1 allmodconfig
-    - name: update apt sources
-      working-directory: ./linux
-      run: sudo apt-get update
-    - name: install generic kernel
-      working-directory: ./linux
-      run: sudo apt-get install -y linux-image-generic libelf-dev
     - name: Create kernel configuration file
       working-directory: ./linux
       run: make V=1 arch=x86_64 allmodconfig
