@@ -16,10 +16,7 @@ jobs:
     - name: APT install packages
       run: sudo apt-get install -y git linux-image-generic libelf-dev build-essential ccache
     - name: Clone Linux kernel
-      run: git clone https://github.com/torvalds/linux.git
-    - name: Checkout build tag
-      working-directory: ./linux
-      run: git checkout tags/${{ vars.GITVER_CHECKOUT }} -b build
+      run: git clone --single-branch -b ${{ vars.GITVER_CHECKOUT }} https://github.com/torvalds/linux.git
     - name: Setup ccache
       uses: hendrikmuhs/ccache-action@v1.2
     - name: Get current date
