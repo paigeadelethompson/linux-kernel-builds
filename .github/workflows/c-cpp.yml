@@ -575,7 +575,10 @@ jobs:
         scripts/config -d CONFIG_ARCH_USE_MEMTEST
         scripts/config -d CONFIG_MEMTEST
         scripts/config -d CONFIG_HYPERV_TESTING        
-    - name: make-all
+    - name: Make olddefconfig
+      working-directory: ./linux
+      run: sudo make V=1 olddefconfig       
+    - name: Make all
       working-directory: ./linux
       run: sudo make V=1 all
     - name: Make archives
