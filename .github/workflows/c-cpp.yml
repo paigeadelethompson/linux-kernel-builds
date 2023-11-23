@@ -43,12 +43,12 @@ jobs:
       working-directory: ./linux
       run: make V=1 arch=x86_64 allmodconfig
     - name: Set custom options
+      working-directory: ./linux
       run: |
         make mrproper && make clean
         make defconfig
         make allmodconfig
         scripts/config -e CONFIG_HZ_1000
-        scripts/config -e CONFIG_MCORE2
         scripts/config -e CONFIG_PREEMPT
         scripts/config -d CONFIG_CGROUP_DEBUG
         scripts/config -d CONFIG_DEBUG_RSEQ
