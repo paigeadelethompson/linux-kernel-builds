@@ -565,7 +565,7 @@ jobs:
         scripts/config -d CONFIG_ARCH_USE_MEMTEST
         scripts/config -d CONFIG_MEMTEST
         scripts/config -d CONFIG_HYPERV_TESTING
-                 scripts/config -d CONFIG_FORCE_TASKS_TRACE_RCU
+        scripts/config -d CONFIG_FORCE_TASKS_TRACE_RCU
          scripts/config -d CONFIG_TASKS_TRACE_RCU
          scripts/config -d CONFIG_TASKS_TRACE_RCU_READ_MB
          scripts/config -d CONFIG_SYSCTL_EXCEPTION_TRACE
