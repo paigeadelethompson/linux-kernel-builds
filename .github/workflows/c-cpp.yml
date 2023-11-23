@@ -30,22 +30,19 @@ jobs:
       run: echo "stamp=$(date '+%s')" >> $GITHUB_ENV
     - name: Make mrproper
       working-directory: ./linux
-      run: make V=1 mrproper
+      run: make V=1 CC="ccache gcc" mrproper
     - name: Make clean
       working-directory: ./linux
-      run: make V=1 clean
+      run: make V=1 CC="ccache gcc" clean
     - name: Make allmodconfig
       working-directory: ./linux
-      run: make V=1 allmodconfig
+      run: make V=1 CC="ccache gcc" allmodconfig
     - name: Create kernel configuration file
       working-directory: ./linux
-      run: make V=1 arch=x86_64 allmodconfig
+      run: make V=1 CC="ccache gcc" allmodconfig
     - name: Set custom options
       working-directory: ./linux
       run: |
-        make mrproper && make clean
-        make defconfig
-        make allmodconfig
         scripts/config -e CONFIG_HZ_1000
         scripts/config -e CONFIG_PREEMPT
         scripts/config -d CONFIG_FW_CFG_SYSFS
@@ -577,13 +574,13 @@ jobs:
         scripts/config -d CONFIG_HYPERV_TESTING        
     - name: Make olddefconfig
       working-directory: ./linux
-      run: sudo make V=1 olddefconfig       
+      run: make V=1 CC="ccache gcc" olddefconfig       
     - name: Make all
       working-directory: ./linux
-      run: sudo make V=1 all
+      run: make V=1 CC="ccache gcc" all
     - name: Make archives
       working-directory: ./linux
-      run: sudo make V=1 rpm-pkg deb-pkg snap-pkg targz-pkg tarbz2-pkg tarxz-pkg tarzst-pkg perf-tar-src-pkg perf-targz-src-pkg perf-tarbz2-src-pkg perf-tarxz-src-pkg perf-tarzst-src-pkg
+      run: make V=1 CC="ccache gcc" rpm-pkg deb-pkg snap-pkg targz-pkg tarbz2-pkg tarxz-pkg tarzst-pkg perf-tar-src-pkg perf-targz-src-pkg perf-tarbz2-src-pkg perf-tarxz-src-pkg perf-tarzst-src-pkg
     - name: Create GH release
       uses: actions/create-release@v1
       id: create_release
