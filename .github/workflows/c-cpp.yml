@@ -13,61 +13,375 @@ jobs:
     steps:
     - uses: actions/checkout@v3
       with:
+        ref: ${{ GITVER_CHECKOUT }}
         submodules: true
     - name: Enable ccache
       uses: hendrikmuhs/ccache-action@v1.2
-    - name: Update srctree
+    - name: Get kernel version string
       working-directory: ./linux
-      run: git checkout master ; git pull origin master --ff-only
+      id: version
+      run: echo "kernel_version=$(make kernelversion)" >> $GITHUB_ENV
     - name: Get current date
       id: date
       run: echo "stamp=$(date '+%s')" >> $GITHUB_ENV
     - name: Make mrproper
       working-directory: ./linux
-      run: make V=1 arch=x86_64 mrproper
+      run: make V=1 mrproper
     - name: Make clean
       working-directory: ./linux
-      run: make V=2 arch=x86_64 clean
+      run: make V=1 clean
     - name: Make allmodconfig
       working-directory: ./linux
-      run: make V=2 arch=x86_64 allmodconfig
-    - name: Collect module names
-      working-directory: ./linux
-      run: cat .config | grep "=m" > allmodconfig
-    - name: Create config 
-      working-directory: ./linux
-      run: mv allmodconfig .config
+      run: make V=1 allmodconfig
     - name: update apt sources
       working-directory: ./linux
       run: sudo apt-get update
     - name: install generic kernel
       working-directory: ./linux
       run: sudo apt-get install -y linux-image-generic libelf-dev
-    - name: default-config-options
+    - name: Create kernel configuration file
       working-directory: ./linux
-      run: ls /boot/config-* | head -n 1 | xargs -i cat {} | grep -v "CONFIG_SYSTEM_TRUSTED_KEYS" | grep -v "CONFIG_SYSTEM_REVOCATION_KEYS" | grep -v "=m" | grep -v "#" | grep "." >> .config
-    - name: olddefconfig
-      working-directory: ./linux
-      run: make V=2 arch=x86_64 olddefconfig
-    - name: Get kernel version string
-      working-directory: ./linux
-      id: version
-      run: echo "kernel_version=$(make kernelversion)" >> $GITHUB_ENV
+      run: make V=1 arch=x86_64 allmodconfig
+    - name: Set custom options
+      run: |
+        - make mrproper && make clean
+        - make defconfig
+        - make allmodconfig
+        - scripts/config -e CONFIG_HZ_1000
+        - scripts/config -e CONFIG_MCORE2
+        - scripts/config -e CONFIG_PREEMPT
+        - scripts/config -d CONFIG_CGROUP_DEBUG
+        - scripts/config -d CONFIG_DEBUG_RSEQ
+        - scripts/config -d CONFIG_DEBUG_PERF_USE_VMALLOC
+        - scripts/config -d CONFIG_IOSF_MBI_DEBUG
+        - scripts/config -d CONFIG_PARAVIRT_DEBUG
+        - scripts/config -d CONFIG_XEN_DEBUG_FS
+        - scripts/config -d CONFIG_X86_DEBUGCTLMSR
+        - scripts/config -d CONFIG_CALL_THUNKS_DEBUG
+        - scripts/config -d CONFIG_PM_DEBUG
+        - scripts/config -d CONFIG_PM_ADVANCED_DEBUG
+        - scripts/config -d CONFIG_PM_SLEEP_DEBUG
+        - scripts/config -d CONFIG_ACPI_DEBUGGER
+        - scripts/config -d CONFIG_ACPI_DEBUGGER_USER
+        - scripts/config -d CONFIG_ACPI_DEBUG
+        - scripts/config -d CONFIG_NFIT_SECURITY_DEBUG
+        - scripts/config -d CONFIG_ACPI_APEI_ERST_DEBUG
+        - scripts/config -d CONFIG_SECCOMP_CACHE_DEBUG
+        - scripts/config -d CONFIG_ARCH_SUPPORTS_DEBUG_PAGEALLOC
+        - scripts/config -d CONFIG_MODULE_DEBUG
+        - scripts/config -d CONFIG_MODULE_DEBUG_AUTOLOAD_DUPS
+        - scripts/config -d CONFIG_MODULE_DEBUG_AUTOLOAD_DUPS_TRACE
+        - scripts/config -d CONFIG_BLK_DEBUG_FS
+        - scripts/config -d CONFIG_BLK_DEBUG_FS_ZONED
+        - scripts/config -d CONFIG_LDM_DEBUG
+        - scripts/config -d CONFIG_BFQ_CGROUP_DEBUG
+        - scripts/config -d CONFIG_CMA_DEBUG
+        - scripts/config -d CONFIG_IP_VS_DEBUG
+        - scripts/config -d CONFIG_IP_DCCP_CCID2_DEBUG
+        - scripts/config -d CONFIG_IP_DCCP_CCID3_DEBUG
+        - scripts/config -d CONFIG_IP_DCCP_TFRC_DEBUG
+        - scripts/config -d CONFIG_IP_DCCP_DEBUG
+        - scripts/config -d CONFIG_RDS_DEBUG
+        - scripts/config -d CONFIG_BATMAN_ADV_DEBUG
+        - scripts/config -d CONFIG_AF_RXRPC_DEBUG
+        - scripts/config -d CONFIG_LIB80211_DEBUG
+        - scripts/config -d CONFIG_MAC80211_DEBUG_MENU
+        - scripts/config -d CONFIG_MAC80211_VERBOSE_DEBUG
+        - scripts/config -d CONFIG_MAC80211_MLME_DEBUG
+        - scripts/config -d CONFIG_MAC80211_STA_DEBUG
+        - scripts/config -d CONFIG_MAC80211_HT_DEBUG
+        - scripts/config -d CONFIG_MAC80211_OCB_DEBUG
+        - scripts/config -d CONFIG_MAC80211_IBSS_DEBUG
+        - scripts/config -d CONFIG_MAC80211_PS_DEBUG
+        - scripts/config -d CONFIG_MAC80211_MPL_DEBUG
+        - scripts/config -d CONFIG_MAC80211_MPATH_DEBUG
+        - scripts/config -d CONFIG_MAC80211_MHWMP_DEBUG
+        - scripts/config -d CONFIG_MAC80211_MESH_SYNC_DEBUG
+        - scripts/config -d CONFIG_MAC80211_MESH_CSA_DEBUG
+        - scripts/config -d CONFIG_MAC80211_MESH_PS_DEBUG
+        - scripts/config -d CONFIG_MAC80211_TDLS_DEBUG
+        - scripts/config -d CONFIG_MAC80211_DEBUG_COUNTERS
+        - scripts/config -d CONFIG_NET_9P_DEBUG
+        - scripts/config -d CONFIG_CAIF_DEBUG
+        - scripts/config -d CONFIG_CEPH_LIB_PRETTYDEBUG
+        - scripts/config -d CONFIG_PCI_DEBUG
+        - scripts/config -d CONFIG_RAPIDIO_DEBUG
+        - scripts/config -d CONFIG_FW_LOADER_DEBUG
+        - scripts/config -d CONFIG_DEBUG_DRIVER
+        - scripts/config -d CONFIG_DEBUG_DEVRES
+        - scripts/config -d CONFIG_DEBUG_TEST_DRIVER_REMOVE
+        - scripts/config -d CONFIG_MHI_BUS_DEBUG
+        - scripts/config -d CONFIG_MTD_PMC551_DEBUG
+        - scripts/config -d CONFIG_PNP_DEBUG_MESSAGES
+        - scripts/config -d CONFIG_SGI_GRU_DEBUG
+        - scripts/config -d CONFIG_CB710_DEBUG
+        - scripts/config -d CONFIG_CB710_DEBUG_ASSUMPTIONS
+        - scripts/config -d CONFIG_AIC7XXX_DEBUG_ENABLE
+        - scripts/config -d CONFIG_AIC7XXX_DEBUG_MASK
+        - scripts/config -d CONFIG_AIC79XX_DEBUG_ENABLE
+        - scripts/config -d CONFIG_AIC79XX_DEBUG_MASK
+        - scripts/config -d CONFIG_AIC94XX_DEBUG
+        - scripts/config -d CONFIG_SCSI_MVSAS_DEBUG
+        - scripts/config -d CONFIG_SCSI_SNIC_DEBUG_FS
+        - scripts/config -d CONFIG_TCM_QLA2XXX_DEBUG
+        - scripts/config -d CONFIG_SCSI_LPFC_DEBUG_FS
+        - scripts/config -d CONFIG_SCSI_DEBUG
+        - scripts/config -d CONFIG_BCACHE_DEBUG
+        - scripts/config -d CONFIG_DM_DEBUG
+        - scripts/config -d CONFIG_DM_DEBUG_BLOCK_MANAGER_LOCKING
+        - scripts/config -d CONFIG_DM_DEBUG_BLOCK_STACK_TRACING
+        - scripts/config -d CONFIG_WIREGUARD_DEBUG
+        - scripts/config -d CONFIG_ATM_ENI_DEBUG
+        - scripts/config -d CONFIG_ATM_IDT77252_DEBUG
+        - scripts/config -d CONFIG_ATM_IA_DEBUG
+        - scripts/config -d CONFIG_ATM_FORE200E_DEBUG
+        - scripts/config -d CONFIG_SKGE_DEBUG
+        - scripts/config -d CONFIG_SKY2_DEBUG
+        - scripts/config -d CONFIG_MLX4_DEBUG
+        - scripts/config -d CONFIG_NFP_DEBUG
+        - scripts/config -d CONFIG_CAN_DEBUG_DEVICES
+        - scripts/config -d CONFIG_ATH_DEBUG
+        - scripts/config -d CONFIG_ATH5K_DEBUG
+        - scripts/config -d CONFIG_ATH9K_COMMON_DEBUG
+        - scripts/config -d CONFIG_ATH6KL_DEBUG
+        - scripts/config -d CONFIG_ATH10K_DEBUG
+        - scripts/config -d CONFIG_ATH11K_DEBUG
+        - scripts/config -d CONFIG_ATH12K_DEBUG
+        - scripts/config -d CONFIG_B43_DEBUG
+        - scripts/config -d CONFIG_B43LEGACY_DEBUG
+        - scripts/config -d CONFIG_IPW2100_DEBUG
+        - scripts/config -d CONFIG_IPW2200_DEBUG
+        - scripts/config -d CONFIG_LIBIPW_DEBUG
+        - scripts/config -d CONFIG_IWLEGACY_DEBUG
+        - scripts/config -d CONFIG_IWLWIFI_DEBUG
+        - scripts/config -d CONFIG_LIBERTAS_DEBUG
+        - scripts/config -d CONFIG_LIBERTAS_THINFIRM_DEBUG
+        - scripts/config -d CONFIG_RT2X00_DEBUG
+        - scripts/config -d CONFIG_RTLWIFI_DEBUG
+        - scripts/config -d CONFIG_RTW88_DEBUG
+        - scripts/config -d CONFIG_RTW89_DEBUG
+        - scripts/config -d CONFIG_RTW89_DEBUGMSG
+        - scripts/config -d CONFIG_ZD1211RW_DEBUG
+        - scripts/config -d CONFIG_I2C_DEBUG_CORE
+        - scripts/config -d CONFIG_I2C_DEBUG_ALGO
+        - scripts/config -d CONFIG_I2C_DEBUG_BUS
+        - scripts/config -d CONFIG_SPI_DEBUG
+        - scripts/config -d CONFIG_PPS_DEBUG
+        - scripts/config -d CONFIG_DEBUG_PINCTRL
+        - scripts/config -d CONFIG_DEBUG_GPIO
+        - scripts/config -d CONFIG_POWER_SUPPLY_DEBUG
+        - scripts/config -d CONFIG_HWMON_DEBUG_CHIP
+        - scripts/config -d CONFIG_BCM_KONA_WDT_DEBUG
+        - scripts/config -d CONFIG_BCMA_DEBUG
+        - scripts/config -d CONFIG_REGULATOR_DEBUG
+        - scripts/config -d CONFIG_VIDEO_ADV_DEBUG
+        - scripts/config -d CONFIG_DVB_ULE_DEBUG
+        - scripts/config -d CONFIG_USB_PWC_DEBUG
+        - scripts/config -d CONFIG_VIDEO_PVRUSB2_DEBUGIFC
+        - scripts/config -d CONFIG_DVB_B2C2_FLEXCOP_USB_DEBUG
+        - scripts/config -d CONFIG_DVB_USB_DEBUG
+        - scripts/config -d CONFIG_DVB_B2C2_FLEXCOP_PCI_DEBUG
+        - scripts/config -d CONFIG_VIDEO_TI_VPE_DEBUG
+        - scripts/config -d CONFIG_VIDEO_OMAP3_DEBUG
+        - scripts/config -d CONFIG_DVB_B2C2_FLEXCOP_DEBUG
+        - scripts/config -d CONFIG_DRM_DEBUG_DP_MST_TOPOLOGY_REFS
+        - scripts/config -d CONFIG_DRM_DEBUG_MODESET_LOCK
+        - scripts/config -d CONFIG_DEBUG_KERNEL_DC
+        - scripts/config -d CONFIG_NOUVEAU_DEBUG
+        - scripts/config -d CONFIG_NOUVEAU_DEBUG_DEFAULT
+        - scripts/config -d CONFIG_NOUVEAU_DEBUG_MMU
+        - scripts/config -d CONFIG_NOUVEAU_DEBUG_PUSH
+        - scripts/config -d CONFIG_DRM_I915_DEBUG_MMIO
+        - scripts/config -d CONFIG_DRM_I915_SW_FENCE_DEBUG_OBJECTS
+        - scripts/config -d CONFIG_DRM_I915_DEBUG_GUC
+        - scripts/config -d CONFIG_DRM_I915_DEBUG_VBLANK_EVADE
+        - scripts/config -d CONFIG_DRM_I915_DEBUG_RUNTIME_PM
+        - scripts/config -d CONFIG_DRM_TEGRA_DEBUG
+        - scripts/config -d CONFIG_FB_NVIDIA_DEBUG
+        - scripts/config -d CONFIG_FB_RIVA_DEBUG
+        - scripts/config -d CONFIG_FB_INTEL_DEBUG
+        - scripts/config -d CONFIG_FB_RADEON_DEBUG
+        - scripts/config -d CONFIG_FB_S3C_DEBUG_REGWRITE
+        - scripts/config -d CONFIG_FB_OMAP2_DEBUG_SUPPORT
+        - scripts/config -d CONFIG_FB_OMAP2_DSS_DEBUG
+        - scripts/config -d CONFIG_SND_DEBUG
+        - scripts/config -d CONFIG_SND_DEBUG_VERBOSE
+        - scripts/config -d CONFIG_SND_PCM_XRUN_DEBUG
+        - scripts/config -d CONFIG_SND_CTL_DEBUG
+        - scripts/config -d CONFIG_SND_JACK_INJECTION_DEBUG
+        - scripts/config -d CONFIG_SND_SOC_SOF_DEBUG_PROBES
+        - scripts/config -d CONFIG_SND_SOC_SOF_DEBUG
+        - scripts/config -d CONFIG_SND_SOC_SOF_DEBUG_XRUN_STOP
+        - scripts/config -d CONFIG_SND_SOC_SOF_DEBUG_VERBOSE_IPC
+        - scripts/config -d CONFIG_SND_SOC_SOF_DEBUG_FORCE_IPC_POSITION
+        - scripts/config -d CONFIG_SND_SOC_SOF_DEBUG_ENABLE_FIRMWARE_TRACE
+        - scripts/config -d CONFIG_SND_SOC_SOF_DEBUG_IPC_FLOOD_TEST
+        - scripts/config -d CONFIG_SND_SOC_SOF_DEBUG_IPC_FLOOD_TEST_NUM
+        - scripts/config -d CONFIG_SND_SOC_SOF_DEBUG_IPC_MSG_INJECTOR
+        - scripts/config -d CONFIG_SND_SOC_SOF_DEBUG_IPC_KERNEL_INJECTOR
+        - scripts/config -d CONFIG_SND_SOC_SOF_DEBUG_RETAIN_DSP_CONTEXT
+        - scripts/config -d CONFIG_USB_STORAGE_DEBUG
+        - scripts/config -d CONFIG_USBIP_DEBUG
+        - scripts/config -d CONFIG_USB_MTU3_DEBUG
+        - scripts/config -d CONFIG_USB_DWC2_DEBUG
+        - scripts/config -d CONFIG_USB_DWC2_DEBUG_PERIODIC
+        - scripts/config -d CONFIG_USB_SERIAL_DEBUG
+        - scripts/config -d CONFIG_USB_GADGET_DEBUG
+        - scripts/config -d CONFIG_USB_GADGET_DEBUG_FILES
+        - scripts/config -d CONFIG_USB_GADGET_DEBUG_FS
+        - scripts/config -d CONFIG_MMC_DEBUG
+        - scripts/config -d CONFIG_MEMSTICK_DEBUG
+        - scripts/config -d CONFIG_HFI1_DEBUG_SDMA_ORDER
+        - scripts/config -d CONFIG_INFINIBAND_MTHCA_DEBUG
+        - scripts/config -d CONFIG_INFINIBAND_IPOIB_DEBUG
+        - scripts/config -d CONFIG_INFINIBAND_IPOIB_DEBUG_DATA
+        - scripts/config -d CONFIG_EDAC_DEBUG
+        - scripts/config -d CONFIG_RTC_DEBUG
+        - scripts/config -d CONFIG_DMADEVICES_DEBUG
+        - scripts/config -d CONFIG_DMADEVICES_VDEBUG
+        - scripts/config -d CONFIG_DMABUF_DEBUG
+        - scripts/config -d CONFIG_MLX5_VDPA_STEERING_DEBUG
+        - scripts/config -d CONFIG_COMEDI_DEBUG
+        - scripts/config -d CONFIG_AMD_PMF_DEBUG
+        - scripts/config -d CONFIG_THINKPAD_ACPI_DEBUGFACILITIES
+        - scripts/config -d CONFIG_THINKPAD_ACPI_DEBUG
+        - scripts/config -d CONFIG_DMAR_DEBUG
+        - scripts/config -d CONFIG_OMAP_IOMMU_DEBUG
+        - scripts/config -d CONFIG_EXYNOS_IOMMU_DEBUG
+        - scripts/config -d CONFIG_OMAP_GPMC_DEBUG
+        - scripts/config -d CONFIG_PWM_DEBUG
+        - scripts/config -d CONFIG_RAS_CEC_DEBUG
+        - scripts/config -d CONFIG_INTEL_TH_DEBUG
+        - scripts/config -d CONFIG_EXT4_DEBUG
+        - scripts/config -d CONFIG_JBD2_DEBUG
+        - scripts/config -d CONFIG_JFS_DEBUG
+        - scripts/config -d CONFIG_XFS_DEBUG
+        - scripts/config -d CONFIG_OCFS2_DEBUG_MASKLOG
+        - scripts/config -d CONFIG_OCFS2_DEBUG_FS
+        - scripts/config -d CONFIG_BTRFS_DEBUG
+        - scripts/config -d CONFIG_BCACHEFS_DEBUG_TRANSACTIONS
+        - scripts/config -d CONFIG_BCACHEFS_DEBUG
+        - scripts/config -d CONFIG_QUOTA_DEBUG
+        - scripts/config -d CONFIG_OVERLAY_FS_DEBUG
+        - scripts/config -d CONFIG_FSCACHE_DEBUG
+        - scripts/config -d CONFIG_CACHEFILES_DEBUG
+        - scripts/config -d CONFIG_NTFS_DEBUG
+        - scripts/config -d CONFIG_BEFS_DEBUG
+        - scripts/config -d CONFIG_JFFS2_FS_DEBUG
+        - scripts/config -d CONFIG_QNX6FS_DEBUG
+        - scripts/config -d CONFIG_UFS_DEBUG
+        - scripts/config -d CONFIG_EROFS_FS_DEBUG
+        - scripts/config -d CONFIG_NFS_DEBUG
+        - scripts/config -d CONFIG_SUNRPC_DEBUG
+        - scripts/config -d CONFIG_CIFS_DEBUG
+        - scripts/config -d CONFIG_CIFS_DEBUG2
+        - scripts/config -d CONFIG_CIFS_DEBUG_DUMP_KEYS
+        - scripts/config -d CONFIG_AFS_DEBUG
+        - scripts/config -d CONFIG_AFS_DEBUG_CURSOR
+        - scripts/config -d CONFIG_DLM_DEBUG
+        - scripts/config -d CONFIG_SECURITY_SELINUX_DEBUG
+        - scripts/config -d CONFIG_SECURITY_APPARMOR_DEBUG
+        - scripts/config -d CONFIG_SECURITY_APPARMOR_DEBUG_ASSERTS
+        - scripts/config -d CONFIG_SECURITY_APPARMOR_DEBUG_MESSAGES
+        - scripts/config -d CONFIG_CRYPTO_DEV_SUN8I_CE_DEBUG
+        - scripts/config -d CONFIG_CRYPTO_DEV_SUN8I_SS_DEBUG
+        - scripts/config -d CONFIG_CRYPTO_DEV_SL3516_DEBUG
+        - scripts/config -d CONFIG_CRYPTO_DEV_AMLOGIC_GXL_DEBUG
+        - scripts/config -d CONFIG_CRYPTO_DEV_ASPEED_DEBUG
+        - scripts/config -d CONFIG_DMA_API_DEBUG
+        - scripts/config -d CONFIG_DMA_API_DEBUG_SG
+        - scripts/config -d CONFIG_DYNAMIC_DEBUG
+        - scripts/config -d CONFIG_DYNAMIC_DEBUG_CORE
+        - scripts/config -d CONFIG_DEBUG_BUGVERBOSE
+        - scripts/config -d CONFIG_DEBUG_KERNEL
+        - scripts/config -d CONFIG_DEBUG_MISC
+        - scripts/config -d CONFIG_DEBUG_INFO_NONE
+        - scripts/config -d CONFIG_DEBUG_SECTION_MISMATCH
+        - scripts/config -d CONFIG_DEBUG_FORCE_FUNCTION_ALIGN_64B
+        - scripts/config -d CONFIG_DEBUG_FORCE_WEAK_PER_CPU
+        - scripts/config -d CONFIG_DEBUG_FS
+        - scripts/config -d CONFIG_DEBUG_FS_ALLOW_ALL
+        - scripts/config -d CONFIG_ARCH_HAS_EARLY_DEBUG
+        - scripts/config -d CONFIG_DEBUG_NET
+        - scripts/config -d CONFIG_DEBUG_PAGEALLOC
+        - scripts/config -d CONFIG_DEBUG_PAGEALLOC_ENABLE_DEFAULT
+        - scripts/config -d CONFIG_DEBUG_PAGE_REF
+        - scripts/config -d CONFIG_DEBUG_RODATA_TEST
+        - scripts/config -d CONFIG_ARCH_HAS_DEBUG_WX
+        - scripts/config -d CONFIG_DEBUG_WX
+        - scripts/config -d CONFIG_HAVE_DEBUG_KMEMLEAK
+        - scripts/config -d CONFIG_DEBUG_KMEMLEAK
+        - scripts/config -d CONFIG_DEBUG_KMEMLEAK_MEM_POOL_SIZE
+        - scripts/config -d CONFIG_DEBUG_KMEMLEAK_DEFAULT_OFF
+        - scripts/config -d CONFIG_DEBUG_KMEMLEAK_AUTO_SCAN
+        - scripts/config -d CONFIG_DEBUG_OBJECTS
+        - scripts/config -d CONFIG_DEBUG_OBJECTS_SELFTEST
+        - scripts/config -d CONFIG_DEBUG_OBJECTS_FREE
+        - scripts/config -d CONFIG_DEBUG_OBJECTS_TIMERS
+        - scripts/config -d CONFIG_DEBUG_OBJECTS_WORK
+        - scripts/config -d CONFIG_DEBUG_OBJECTS_RCU_HEAD
+        - scripts/config -d CONFIG_DEBUG_OBJECTS_PERCPU_COUNTER
+        - scripts/config -d CONFIG_DEBUG_OBJECTS_ENABLE_DEFAULT
+        - scripts/config -d CONFIG_SHRINKER_DEBUG
+        - scripts/config -d CONFIG_DEBUG_STACK_USAGE
+        - scripts/config -d CONFIG_ARCH_HAS_DEBUG_VM_PGTABLE
+        - scripts/config -d CONFIG_DEBUG_VM_IRQSOFF
+        - scripts/config -d CONFIG_DEBUG_VM
+        - scripts/config -d CONFIG_DEBUG_VM_MAPLE_TREE
+        - scripts/config -d CONFIG_DEBUG_VM_RB
+        - scripts/config -d CONFIG_DEBUG_VM_PGFLAGS
+        - scripts/config -d CONFIG_DEBUG_VM_PGTABLE
+        - scripts/config -d CONFIG_ARCH_HAS_DEBUG_VIRTUAL
+        - scripts/config -d CONFIG_DEBUG_VIRTUAL
+        - scripts/config -d CONFIG_DEBUG_MEMORY_INIT
+        - scripts/config -d CONFIG_DEBUG_PER_CPU_MAPS
+        - scripts/config -d CONFIG_DEBUG_SHIRQ
+        - scripts/config -d CONFIG_SCHED_DEBUG
+        - scripts/config -d CONFIG_DEBUG_TIMEKEEPING
+        - scripts/config -d CONFIG_DEBUG_PREEMPT
+        - scripts/config -d CONFIG_LOCK_DEBUGGING_SUPPORT
+        - scripts/config -d CONFIG_DEBUG_RT_MUTEXES
+        - scripts/config -d CONFIG_DEBUG_SPINLOCK
+        - scripts/config -d CONFIG_DEBUG_MUTEXES
+        - scripts/config -d CONFIG_DEBUG_WW_MUTEX_SLOWPATH
+        - scripts/config -d CONFIG_DEBUG_RWSEMS
+        - scripts/config -d CONFIG_DEBUG_LOCK_ALLOC
+        - scripts/config -d CONFIG_DEBUG_LOCKDEP
+        - scripts/config -d CONFIG_DEBUG_ATOMIC_SLEEP
+        - scripts/config -d CONFIG_DEBUG_LOCKING_API_SELFTESTS
+        - scripts/config -d CONFIG_CSD_LOCK_WAIT_DEBUG
+        - scripts/config -d CONFIG_CSD_LOCK_WAIT_DEBUG_DEFAULT
+        - scripts/config -d CONFIG_DEBUG_IRQFLAGS
+        - scripts/config -d CONFIG_DEBUG_KOBJECT
+        - scripts/config -d CONFIG_DEBUG_KOBJECT_RELEASE
+        - scripts/config -d CONFIG_DEBUG_LIST
+        - scripts/config -d CONFIG_DEBUG_PLIST
+        - scripts/config -d CONFIG_DEBUG_SG
+        - scripts/config -d CONFIG_DEBUG_NOTIFIERS
+        - scripts/config -d CONFIG_DEBUG_CLOSURES
+        - scripts/config -d CONFIG_DEBUG_MAPLE_TREE
+        - scripts/config -d CONFIG_DEBUG_CREDENTIALS
+        - scripts/config -d CONFIG_RCU_EQS_DEBUG
+        - scripts/config -d CONFIG_DEBUG_WQ_FORCE_RR_CPU
+        - scripts/config -d CONFIG_DEBUG_CGROUP_REF
+        - scripts/config -d CONFIG_HIST_TRIGGERS_DEBUG
+        - scripts/config -d CONFIG_DEBUG_TLBFLUSH
+        - scripts/config -d CONFIG_IOMMU_DEBUG
+        - scripts/config -d CONFIG_DEBUG_BOOT_PARAMS
+        - scripts/config -d CONFIG_CPA_DEBUG
+        - scripts/config -d CONFIG_DEBUG_ENTRY
+        - scripts/config -d CONFIG_DEBUG_NMI_SELFTEST
+        - scripts/config -d CONFIG_X86_DEBUG_FPU
+        - scripts/config -d CONFIG_PUNIT_ATOM_DEBUG
+        - scripts/config -d CONFIG_FAULT_INJECTION_DEBUG_FS
+        - scripts/config -d CONFIG_TEST_DYNAMIC_DEBUG
+        - scripts/config -d CONFIG_TEST_DEBUG_VIRTUAL
     - name: make-all
       working-directory: ./linux
-      run: sudo make V=2 arch=x86_64 all
-    - name: make-tarzst
-      working-directory: ./linux
-      run: sudo make V=2 arch=x86_64 tarzst-pkg
+      run: sudo make V=1 all
     - name: make-rpm
       working-directory: ./linux
-      run: sudo make V=2 arch=x86_64 rpm-pkg
-    - name: make-deb
-      working-directory: ./linux
-      run: sudo make V=2 arch=x86_64 deb-pkg
-    - name: make-snap
-      working-directory: ./linux
-      run: sudo make V=2 arch=x86_64 snap-pkg
+      run: sudo make V=1 rpm-pkg
     - name: Create GH release
       uses: actions/create-release@v1
       id: create_release
