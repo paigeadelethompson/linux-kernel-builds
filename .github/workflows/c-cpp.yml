@@ -12,7 +12,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: APT update sources
-      working-directory: ./linux
       run: sudo apt-get update
     - name: APT install packages
       working-directory: ./linux
