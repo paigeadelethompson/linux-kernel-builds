@@ -14,7 +14,6 @@ jobs:
     - name: APT update sources
       run: sudo apt-get update
     - name: APT install packages
-      working-directory: ./linux
       run: sudo apt-get install -y linux-image-generic libelf-dev build-essential ccache
     - uses: actions/checkout@v3
       with:
