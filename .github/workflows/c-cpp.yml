@@ -13,7 +13,7 @@ jobs:
     steps:
     - uses: actions/checkout@v3
       with:
-        ref: $GITVER_CHECKOUT
+        ref: ${{ env.GITVER_CHECKOUT }}
         submodules: true
     - name: Enable ccache
       uses: hendrikmuhs/ccache-action@v1.2
