@@ -724,29 +724,29 @@ jobs:
         GITHUB_TOKEN: ${{ github.token }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: linux/rpmbuild/SRPMS/kernel-${{ env.kernel_version }}-2.src.rpm
-        asset_name: kernel-${{ env.kernel_version }}-2.src.rpm
+        asset_path: linux/rpmbuild/SRPMS/kernel-${{ env.kernel_version }}.src.rpm
+        asset_name: kernel-${{ env.kernel_version }}.src.rpm
     - name: Upload headers RPM to release draft
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ github.token }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: linux/linux/rpmbuild/RPMS/x86_64/kernel-headers-${{ env.kernel_version }}-2.x86_64.rpm
-        asset_name: kernel-headers-${{ env.kernel_version }}-2.x86_64.rpm
+        asset_path: linux/linux/rpmbuild/RPMS/x86_64/kernel-headers-${{ env.kernel_version }}.x86_64.rpm
+        asset_name: kernel-headers-${{ env.kernel_version }}.x86_64.rpm
     - name: Upload kernel RPM to release draft
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ github.token }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: rpmbuild/RPMS/x86_64/kernel-${{ env.kernel_version }}-2.x86_64.rpm
-        asset_name: kernel-${{ env.kernel_version }}-2.x86_64.rpm
+        asset_path: rpmbuild/RPMS/x86_64/kernel-${{ env.kernel_version }}.x86_64.rpm
+        asset_name: kernel-${{ env.kernel_version }}.x86_64.rpm
     - name: Upload devel RPM to release draft
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ github.token }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: rpmbuild/RPMS/x86_64/kernel-devel-${{ env.kernel_version }}-2.x86_64.rpm
+        asset_path: rpmbuild/RPMS/x86_64/kernel-devel-${{ env.kernel_version }}.x86_64.rpm
         asset_name: kernel-devel-${{ env.kernel_version }}-2.x86_64.rpm
