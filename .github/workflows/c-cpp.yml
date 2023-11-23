@@ -14,7 +14,7 @@ jobs:
     - name: APT update sources
       run: sudo apt-get update
     - name: APT install packages
-      run: sudo apt-get install -y git linux-image-generic libelf-dev build-essential ccache
+      run: sudo apt-get install -y git linux-image-generic libelf-dev build-essential ccache debhelper rpm
     - name: Clone Linux kernel
       run: git clone --single-branch -b ${{ vars.GITVER_CHECKOUT }} https://github.com/torvalds/linux.git
     - name: Setup ccache
@@ -39,7 +39,6 @@ jobs:
       run: |
         scripts/config -e CONFIG_HZ_1000
         scripts/config -e CONFIG_PREEMPT
-        scripts/config -d CONFIG_FW_CFG_SYSFS
         scripts/config -d CONFIG_CGROUP_DEBUG
         scripts/config -d CONFIG_DEBUG_RSEQ
         scripts/config -d CONFIG_DEBUG_PERF_USE_VMALLOC
@@ -565,7 +564,137 @@ jobs:
         scripts/config -d CONFIG_TEST_OBJPOOL
         scripts/config -d CONFIG_ARCH_USE_MEMTEST
         scripts/config -d CONFIG_MEMTEST
-        scripts/config -d CONFIG_HYPERV_TESTING        
+        scripts/config -d CONFIG_HYPERV_TESTING
+                 scripts/config -d CONFIG_FORCE_TASKS_TRACE_RCU
+         scripts/config -d CONFIG_TASKS_TRACE_RCU
+         scripts/config -d CONFIG_TASKS_TRACE_RCU_READ_MB
+         scripts/config -d CONFIG_SYSCTL_EXCEPTION_TRACE
+         scripts/config -d CONFIG_TRACEPOINTS
+         scripts/config -d CONFIG_STACKTRACE_SUPPORT
+         scripts/config -d CONFIG_PM_TRACE
+         scripts/config -d CONFIG_PM_TRACE_RTC
+         scripts/config -d CONFIG_KPROBES_ON_FTRACE
+         scripts/config -d CONFIG_HAVE_KPROBES_ON_FTRACE
+         scripts/config -d CONFIG_ARCH_CORRECT_STACKTRACE_ON_KRETPROBE
+         scripts/config -d CONFIG_TRACE_IRQFLAGS_SUPPORT
+         scripts/config -d CONFIG_TRACE_IRQFLAGS_NMI_SUPPORT
+         scripts/config -d CONFIG_HAVE_ARCH_TRACEHOOK
+         scripts/config -d CONFIG_HAVE_RELIABLE_STACKTRACE
+         scripts/config -d CONFIG_MODULE_DEBUG_AUTOLOAD_DUPS_TRACE
+         scripts/config -d CONFIG_NETFILTER_XT_TARGET_TRACE
+         scripts/config -d CONFIG_DMA_FENCE_TRACE
+         scripts/config -d CONFIG_SCSI_IPR_TRACE
+         scripts/config -d CONFIG_ATH_TRACEPOINTS
+         scripts/config -d CONFIG_ATH5K_TRACER
+         scripts/config -d CONFIG_CAPI_TRACE
+         scripts/config -d CONFIG_DRM_I915_LOW_LEVEL_TRACEPOINTS
+         scripts/config -d CONFIG_SND_SOC_SOF_DEBUG_ENABLE_FIRMWARE_TRACE
+         scripts/config -d CONFIG_STM_SOURCE_FTRACE
+         scripts/config -d CONFIG_PSTORE_FTRACE
+         scripts/config -d CONFIG_PSTORE_BLK_FTRACE_SIZE
+         scripts/config -d CONFIG_STACKTRACE_BUILD_ID
+         scripts/config -d CONFIG_LOCKDEP_STACK_TRACE_BITS
+         scripts/config -d CONFIG_LOCKDEP_STACK_TRACE_HASH_BITS
+         scripts/config -d CONFIG_TRACE_IRQFLAGS
+         scripts/config -d CONFIG_TRACE_IRQFLAGS_NMI
+         scripts/config -d CONFIG_STACKTRACE
+         scripts/config -d CONFIG_RCU_TRACE
+         scripts/config -d CONFIG_USER_STACKTRACE_SUPPORT
+         scripts/config -d CONFIG_NOP_TRACER
+         scripts/config -d CONFIG_HAVE_FUNCTION_TRACER
+         scripts/config -d CONFIG_HAVE_FUNCTION_GRAPH_TRACER
+         scripts/config -d CONFIG_HAVE_DYNAMIC_FTRACE
+         scripts/config -d CONFIG_HAVE_DYNAMIC_FTRACE_WITH_REGS
+         scripts/config -d CONFIG_HAVE_DYNAMIC_FTRACE_WITH_DIRECT_CALLS
+         scripts/config -d CONFIG_HAVE_DYNAMIC_FTRACE_WITH_ARGS
+         scripts/config -d CONFIG_HAVE_DYNAMIC_FTRACE_NO_PATCHABLE
+         scripts/config -d CONFIG_HAVE_FTRACE_MCOUNT_RECORD
+         scripts/config -d CONFIG_HAVE_SYSCALL_TRACEPOINTS
+         scripts/config -d CONFIG_TRACER_MAX_TRACE
+         scripts/config -d CONFIG_TRACE_CLOCK
+         scripts/config -d CONFIG_CONTEXT_SWITCH_TRACER
+         scripts/config -d CONFIG_PREEMPTIRQ_TRACEPOINTS
+         scripts/config -d CONFIG_GENERIC_TRACER
+         scripts/config -d CONFIG_FTRACE
+         scripts/config -d CONFIG_FUNCTION_TRACER
+         scripts/config -d CONFIG_FUNCTION_GRAPH_TRACER
+         scripts/config -d CONFIG_DYNAMIC_FTRACE
+         scripts/config -d CONFIG_DYNAMIC_FTRACE_WITH_REGS
+         scripts/config -d CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS
+         scripts/config -d CONFIG_DYNAMIC_FTRACE_WITH_ARGS
+         scripts/config -d CONFIG_STACK_TRACER
+         scripts/config -d CONFIG_TRACE_PREEMPT_TOGGLE
+         scripts/config -d CONFIG_IRQSOFF_TRACER
+         scripts/config -d CONFIG_PREEMPT_TRACER
+         scripts/config -d CONFIG_SCHED_TRACER
+         scripts/config -d CONFIG_HWLAT_TRACER
+         scripts/config -d CONFIG_OSNOISE_TRACER
+         scripts/config -d CONFIG_TIMERLAT_TRACER
+         scripts/config -d CONFIG_MMIOTRACE
+         scripts/config -d CONFIG_FTRACE_SYSCALLS
+         scripts/config -d CONFIG_TRACER_SNAPSHOT
+         scripts/config -d CONFIG_TRACER_SNAPSHOT_PER_CPU_SWAP
+         scripts/config -d CONFIG_BLK_DEV_IO_TRACE
+         scripts/config -d CONFIG_KPROBE_EVENTS_ON_NOTRACE
+         scripts/config -d CONFIG_FTRACE_MCOUNT_RECORD
+         scripts/config -d CONFIG_FTRACE_MCOUNT_USE_CC
+         scripts/config -d CONFIG_TRACE_EVENT_INJECT
+         scripts/config -d CONFIG_TRACEPOINT_BENCHMARK
+         scripts/config -d CONFIG_TRACE_EVAL_MAP_FILE
+         scripts/config -d CONFIG_FTRACE_RECORD_RECURSION
+         scripts/config -d CONFIG_FTRACE_RECORD_RECURSION_SIZE
+         scripts/config -d CONFIG_GCOV_PROFILE_FTRACE
+         scripts/config -d CONFIG_FTRACE_SELFTEST
+         scripts/config -d CONFIG_FTRACE_STARTUP_TEST
+         scripts/config -d CONFIG_EVENT_TRACE_STARTUP_TEST
+         scripts/config -d CONFIG_EVENT_TRACE_TEST_SYSCALLS
+         scripts/config -d CONFIG_FTRACE_SORT_STARTUP_TEST
+         scripts/config -d CONFIG_MMIOTRACE_TEST
+         scripts/config -d CONFIG_SAMPLE_TRACE_EVENTS
+         scripts/config -d CONFIG_SAMPLE_TRACE_CUSTOM_EVENTS
+         scripts/config -d CONFIG_SAMPLE_TRACE_PRINTK
+         scripts/config -d CONFIG_SAMPLE_FTRACE_DIRECT
+         scripts/config -d CONFIG_SAMPLE_FTRACE_DIRECT_MULTI
+         scripts/config -d CONFIG_SAMPLE_FTRACE_OPS
+         scripts/config -d CONFIG_SAMPLE_TRACE_ARRAY
+         scripts/config -d CONFIG_HAVE_SAMPLE_FTRACE_DIRECT
+         scripts/config -d CONFIG_HAVE_SAMPLE_FTRACE_DIRECT_MULTI
+         scripts/config -d CONFIG_HAVE_MMIOTRACE_SUPPORT
+         scripts/config -d CONFIG_FAULT_INJECTION_STACKTRACE_FILTER
+         scripts/config -d CONFIG_CC_HAS_SANCOV_TRACE_PC
+         scripts/config -d CONFIG_BACKTRACE_SELF_TEST
+         scripts/config -d CONFIG_REGMAP_KUNIT
+         scripts/config -d CONFIG_CROS_KUNIT
+         scripts/config -d CONFIG_KUNIT
+         scripts/config -d CONFIG_KUNIT_DEBUGFS
+         scripts/config -d CONFIG_KUNIT_DEFAULT_ENABLED
+         scripts/config -d CONFIG_BITFIELD_KUNIT
+         scripts/config -d CONFIG_CHECKSUM_KUNIT
+         scripts/config -d CONFIG_BOOT_PRINTK_DELAY
+         scripts/config -d CONFIG_PRINTK_CALLER
+         scripts/config -d CONFIG_PRINTK_TIME
+         scripts/config -d CONFIG_NMI_CHECK_CPU
+         scripts/config -d CONFIG_WARN_ALL_UNSEEDED_RANDOM
+         scripts/config -d CONFIG_CPU_HOTPLUG_STATE_CONTROL
+         scripts/config -d CONFIG_LATENCYTOP
+         scripts/config -d CONFIG_SAMPLES
+         scripts/config -d CONFIG_NOTIFIER_ERROR_INJECTION
+         scripts/config -d CONFIG_PM_NOTIFIER_ERROR_INJECT
+         scripts/config -d CONFIG_OF_RECONFIG_NOTIFIER_ERROR_INJECT
+         scripts/config -d CONFIG_NETDEV_NOTIFIER_ERROR_INJECT
+         scripts/config -d CONFIG_FUNCTION_ERROR_INJECTION
+         scripts/config -d CONFIG_FAULT_INJECTION
+         scripts/config -d CONFIG_FAILSLAB
+         scripts/config -d CONFIG_FAIL_PAGE_ALLOC
+         scripts/config -d CONFIG_FAULT_INJECTION_USERCOPY
+         scripts/config -d CONFIG_FAIL_MAKE_REQUEST
+         scripts/config -d CONFIG_FAIL_IO_TIMEOUT
+         scripts/config -d CONFIG_FAIL_FUTEX
+         scripts/config -d CONFIG_FAULT_INJECTION_CONFIGFS
+         scripts/config -d CONFIG_KCOV
+         scripts/config -d CONFIG_KCOV_ENABLE_COMPARISONS
+         scripts/config -d CONFIG_KCOV_INSTRUMENT_ALL
+         scripts/config -d CONFIG_PANIC_ON_OOPS
     - name: Make olddefconfig
       working-directory: ./linux
       run: make V=1 CC="ccache gcc" olddefconfig       
@@ -578,7 +707,7 @@ jobs:
       run: make V=1 CC="ccache gcc" all
     - name: Make archives
       working-directory: ./linux
-      run: make V=1 CC="ccache gcc" rpm-pkg deb-pkg targz-pkg tarbz2-pkg tarxz-pkg tarzst-pkg perf-tar-src-pkg perf-targz-src-pkg perf-tarbz2-src-pkg perf-tarxz-src-pkg perf-tarzst-src-pkg
+      run: make V=1 CC="ccache gcc" rpm-pkg deb-pkg tarxz-pkg tarzst-pkg
     - name: Create GH release
       uses: actions/create-release@v1
       id: create_release
