@@ -1,10 +1,6 @@
 name: build kernel
 
 on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
   workflow_dispatch:
 
 jobs:
@@ -22,7 +18,6 @@ jobs:
       run: git clone --single-branch -b ${{ vars.GITVER_CHECKOUT }} https://github.com/torvalds/linux.git
     - name: Setup ccache
       uses: hendrikmuhs/ccache-action@v1.2
-      max-size: 9000M
     - name: Get current date
       id: date
       run: echo "stamp=$(date '+%s')" >> $GITHUB_ENV
@@ -61,9 +56,12 @@ jobs:
          scripts/config -d CONFIG_ARCH_HAS_DEBUG_VM_PGTABLE
          scripts/config -d CONFIG_ARCH_HAS_DEBUG_WX
          scripts/config -d CONFIG_ARCH_HAS_EARLY_DEBUG
+         scripts/config -d CONFIG_ARCH_HAS_FORCE_DMA_UNENCRYPTED
          scripts/config -d CONFIG_ARCH_SUPPORTS_DEBUG_PAGEALLOC
+         scripts/config -d CONFIG_ARCH_SUPPORTS_KEXEC_SIG_FORCE
          scripts/config -d CONFIG_ARCH_USE_MEMTEST
          scripts/config -d CONFIG_ASYNC_RAID6_TEST
+         scripts/config -d CONFIG_ATA_FORCE
          scripts/config -d CONFIG_ATH10K_DEBUG
          scripts/config -d CONFIG_ATH11K_DEBUG
          scripts/config -d CONFIG_ATH12K_DEBUG
@@ -97,8 +95,10 @@ jobs:
          scripts/config -d CONFIG_BLK_DEBUG_FS
          scripts/config -d CONFIG_BLK_DEBUG_FS_ZONED
          scripts/config -d CONFIG_BLK_DEV_IO_TRACE
+         scripts/config -d CONFIG_BOOT_CONFIG_FORCE
          scripts/config -d CONFIG_BOOTPARAM_SOFTLOCKUP_PANIC
          scripts/config -d CONFIG_BOOT_PRINTK_DELAY
+         scripts/config -d CONFIG_BTRFS_ASSERT
          scripts/config -d CONFIG_BTRFS_DEBUG
          scripts/config -d CONFIG_BTRFS_FS_RUN_SANITY_TESTS
          scripts/config -d CONFIG_BT_SELFTEST
@@ -308,7 +308,9 @@ jobs:
          scripts/config -d CONFIG_FUNCTION_GRAPH_TRACER
          scripts/config -d CONFIG_FUNCTION_TRACER
          scripts/config -d CONFIG_FW_LOADER_DEBUG
+         scripts/config -d CONFIG_GCOV_KERNEL
          scripts/config -d CONFIG_GCOV_PROFILE_FTRACE
+         scripts/config -d CONFIG_GDS_FORCE_MITIGATION
          scripts/config -d CONFIG_GENERIC_IRQ_DEBUGFS
          scripts/config -d CONFIG_GENERIC_TRACER
          scripts/config -d CONFIG_GLOB_SELFTEST
@@ -332,6 +334,7 @@ jobs:
          scripts/config -d CONFIG_HAVE_SAMPLE_FTRACE_DIRECT
          scripts/config -d CONFIG_HAVE_SAMPLE_FTRACE_DIRECT_MULTI
          scripts/config -d CONFIG_HAVE_SYSCALL_TRACEPOINTS
+         scripts/config -d CONFIG_HEADERS_INSTALL
          scripts/config -d CONFIG_HFI1_DEBUG_SDMA_ORDER
          scripts/config -d CONFIG_HID_KUNIT_TEST
          scripts/config -d CONFIG_HIST_TRIGGERS_DEBUG
@@ -365,6 +368,7 @@ jobs:
          scripts/config -d CONFIG_IP_VS_DEBUG
          scripts/config -d CONFIG_IPW2100_DEBUG
          scripts/config -d CONFIG_IPW2200_DEBUG
+         scripts/config -d CONFIG_IRQ_FORCED_THREADING
          scripts/config -d CONFIG_IRQSOFF_TRACER
          scripts/config -d CONFIG_IS_SIGNED_TYPE_KUNIT_TEST
          scripts/config -d CONFIG_IWLEGACY_DEBUG
@@ -376,10 +380,23 @@ jobs:
          scripts/config -d CONFIG_KCOV
          scripts/config -d CONFIG_KCOV_ENABLE_COMPARISONS
          scripts/config -d CONFIG_KCOV_INSTRUMENT_ALL
+         scripts/config -d CONFIG_KCSAN
+         scripts/config -d CONFIG_KCSAN_DELAY_RANDOMIZE
+         scripts/config -d CONFIG_KCSAN_EARLY_ENABLE
          scripts/config -d CONFIG_KCSAN_KUNIT_TEST
+         scripts/config -d CONFIG_KCSAN_REPORT_RACE_UNKNOWN_ORIGIN
          scripts/config -d CONFIG_KCSAN_SELFTEST
+         scripts/config -d CONFIG_KCSAN_SKIP_WATCH_RANDOMIZE
+         scripts/config -d CONFIG_KCSAN_STRICT
+         scripts/config -d CONFIG_KCSAN_VERBOSE
+         scripts/config -d CONFIG_KCSAN_WEAK_MEMORY
+         scripts/config -d CONFIG_KEXEC_SIG_FORCE
+         scripts/config -d CONFIG_KFENCE
+         scripts/config -d CONFIG_KFENCE_DEFERRABLE
          scripts/config -d CONFIG_KFENCE_KUNIT_TEST
+         scripts/config -d CONFIG_KFENCE_STATIC_KEYS
          scripts/config -d CONFIG_KFENCE_STRESS_TEST_FAULTS
+         scripts/config -d CONFIG_KGDB_LOW_LEVEL_TRAP
          scripts/config -d CONFIG_KGDB_TESTS
          scripts/config -d CONFIG_KGDB_TESTS_BOOT_STRING
          scripts/config -d CONFIG_KGDB_TESTS_ON_BOOT
@@ -404,6 +421,7 @@ jobs:
          scripts/config -d CONFIG_LOCK_DEBUGGING_SUPPORT
          scripts/config -d CONFIG_LOCKDEP_STACK_TRACE_BITS
          scripts/config -d CONFIG_LOCKDEP_STACK_TRACE_HASH_BITS
+         scripts/config -d CONFIG_LOCK_DOWN_KERNEL_FORCE_NONE
          scripts/config -d CONFIG_LOCK_TORTURE_TEST
          scripts/config -d CONFIG_LWQ_TEST
          scripts/config -d CONFIG_MAC80211_DEBUG_COUNTERS
@@ -441,14 +459,19 @@ jobs:
          scripts/config -d CONFIG_MODULE_DEBUG
          scripts/config -d CONFIG_MODULE_DEBUG_AUTOLOAD_DUPS
          scripts/config -d CONFIG_MODULE_DEBUG_AUTOLOAD_DUPS_TRACE
+         scripts/config -d CONFIG_MODULE_FORCE_LOAD
+         scripts/config -d CONFIG_MODULE_FORCE_UNLOAD
+         scripts/config -d CONFIG_MODULE_SIG_FORCE
          scripts/config -d CONFIG_MPTCP_KUNIT_TEST
          scripts/config -d CONFIG_MTD_PMC551_DEBUG
          scripts/config -d CONFIG_MTD_TESTS
          scripts/config -d CONFIG_NET_9P_DEBUG
          scripts/config -d CONFIG_NETDEV_ADDR_LIST_TEST
          scripts/config -d CONFIG_NETDEV_NOTIFIER_ERROR_INJECT
+         scripts/config -d CONFIG_NET_DEV_REFCNT_TRACKER
          scripts/config -d CONFIG_NETFILTER_XT_TARGET_TRACE
          scripts/config -d CONFIG_NET_HANDSHAKE_KUNIT_TEST
+         scripts/config -d CONFIG_NET_NS_REFCNT_TRACKER
          scripts/config -d CONFIG_NET_SELFTESTS
          scripts/config -d CONFIG_NET_TEST
          scripts/config -d CONFIG_NFIT_SECURITY_DEBUG
@@ -475,11 +498,19 @@ jobs:
          scripts/config -d CONFIG_OSNOISE_TRACER
          scripts/config -d CONFIG_OVERFLOW_KUNIT_TEST
          scripts/config -d CONFIG_OVERLAY_FS_DEBUG
+         scripts/config -d CONFIG_PAGE_EXTENSION
+         scripts/config -d CONFIG_PAGE_OWNER
+         scripts/config -d CONFIG_PAGE_POISONING
+         scripts/config -d CONFIG_PAGE_TABLE_CHECK
+         scripts/config -d CONFIG_PAGE_TABLE_CHECK_ENFORCED
+         scripts/config -d CONFIG_PAGE_TABLE_CHECK_ENFORCED
          scripts/config -d CONFIG_PARAVIRT_DEBUG
          scripts/config -d CONFIG_PCI_DEBUG
          scripts/config -d CONFIG_PCI_ENDPOINT_TEST
          scripts/config -d CONFIG_PCI_EPF_TEST
+         scripts/config -d CONFIG_PERCPU_STATS
          scripts/config -d CONFIG_PERCPU_TEST
+         scripts/config -d CONFIG_PER_VMA_LOCK_STATS
          scripts/config -d CONFIG_PKCS7_TEST_KEY
          scripts/config -d CONFIG_PM_ADVANCED_DEBUG
          scripts/config -d CONFIG_PM_DEBUG
@@ -515,9 +546,11 @@ jobs:
          scripts/config -d CONFIG_RCU_TORTURE_TEST
          scripts/config -d CONFIG_RCU_TRACE
          scripts/config -d CONFIG_RDS_DEBUG
+         scripts/config -d CONFIG_READABLE_ASM
          scripts/config -d CONFIG_REED_SOLOMON_TEST
          scripts/config -d CONFIG_REGMAP_KUNIT
          scripts/config -d CONFIG_REGULATOR_DEBUG
+         scripts/config -d CONFIG_RELAY
          scripts/config -d CONFIG_RESOURCE_KUNIT_TEST
          scripts/config -d CONFIG_RING_BUFFER_STARTUP_TEST
          scripts/config -d CONFIG_RPCSEC_GSS_KRB5_KUNIT_TEST
@@ -541,6 +574,8 @@ jobs:
          scripts/config -d CONFIG_SAMPLE_TRACE_PRINTK
          scripts/config -d CONFIG_SCF_TORTURE_TEST
          scripts/config -d CONFIG_SCHED_DEBUG
+         scripts/config -d CONFIG_SCHED_STACK_END_CHECK
+         scripts/config -d CONFIG_SCHEDSTATS
          scripts/config -d CONFIG_SCHED_TRACER
          scripts/config -d CONFIG_SCSI_DEBUG
          scripts/config -d CONFIG_SCSI_IPR_TRACE
@@ -552,6 +587,7 @@ jobs:
          scripts/config -d CONFIG_SECURITY_APPARMOR_DEBUG_ASSERTS
          scripts/config -d CONFIG_SECURITY_APPARMOR_DEBUG_MESSAGES
          scripts/config -d CONFIG_SECURITY_APPARMOR_KUNIT_TEST
+         scripts/config -d CONFIG_SECURITY_LOADPIN_ENFORCE
          scripts/config -d CONFIG_SECURITY_SELINUX_DEBUG
          scripts/config -d CONFIG_SGI_GRU_DEBUG
          scripts/config -d CONFIG_SHRINKER_DEBUG
@@ -577,6 +613,7 @@ jobs:
          scripts/config -d CONFIG_SND_SOC_SOF_DEBUG_RETAIN_DSP_CONTEXT
          scripts/config -d CONFIG_SND_SOC_SOF_DEBUG_VERBOSE_IPC
          scripts/config -d CONFIG_SND_SOC_SOF_DEBUG_XRUN_STOP
+         scripts/config -d CONFIG_SND_SOC_SOF_FORCE_PROBE_WORKQUEUE
          scripts/config -d CONFIG_SND_SOC_TOPOLOGY_KUNIT_TEST
          scripts/config -d CONFIG_SND_SOC_UTILS_KUNIT_TEST
          scripts/config -d CONFIG_SND_TEST_COMPONENT
@@ -594,6 +631,7 @@ jobs:
          scripts/config -d CONFIG_STM_SOURCE_FTRACE
          scripts/config -d CONFIG_STRCAT_KUNIT_TEST
          scripts/config -d CONFIG_STRING_SELFTEST
+         scripts/config -d CONFIG_STRIP_ASM_SYMS
          scripts/config -d CONFIG_STRSCPY_KUNIT_TEST
          scripts/config -d CONFIG_SUNRPC_DEBUG
          scripts/config -d CONFIG_SYNTH_EVENT_GEN_TEST
@@ -665,6 +703,13 @@ jobs:
          scripts/config -d CONFIG_TRACER_SNAPSHOT_PER_CPU_SWAP
          scripts/config -d CONFIG_TSNEP_SELFTESTS
          scripts/config -d CONFIG_UAPI_HEADER_TEST
+         scripts/config -d CONFIG_UBSAN
+         scripts/config -d CONFIG_UBSAN_BOOL
+         scripts/config -d CONFIG_UBSAN_BOUNDS
+         scripts/config -d CONFIG_UBSAN_DIV_ZERO
+         scripts/config -d CONFIG_UBSAN_ENUM
+         scripts/config -d CONFIG_UBSAN_SANITIZE_ALL
+         scripts/config -d CONFIG_UBSAN_SHIFT
          scripts/config -d CONFIG_UFS_DEBUG
          scripts/config -d CONFIG_UNICODE_NORMALIZATION_SELFTEST
          scripts/config -d CONFIG_USB4_DMA_TEST
@@ -697,6 +742,7 @@ jobs:
          scripts/config -d CONFIG_X86_DEBUGCTLMSR
          scripts/config -d CONFIG_X86_DEBUG_FPU
          scripts/config -d CONFIG_XEN_DEBUG_FS
+         scripts/config -d CONFIG_XEN_VIRTIO_FORCE_GRANT
          scripts/config -d CONFIG_XFS_DEBUG
          scripts/config -d CONFIG_XZ_DEC_TEST
          scripts/config -d CONFIG_ZD1211RW_DEBUG
@@ -710,9 +756,15 @@ jobs:
     - name: Make all
       working-directory: ./linux
       run: make V=1 CC="ccache gcc" all
-    - name: Make archives
+    - name: Make RPM
       working-directory: ./linux
-      run: make V=1 CC="ccache gcc" ARCH=${{ matrix.arch }} rpm-pkg deb-pkg tarxz-pkg
+      run: rm -f .version ; make V=1 CC="ccache gcc" ARCH=${{ matrix.arch }} -j1 rpm-pkg
+    - name: Make DEB
+      working-directory: ./linux
+      run: rm -f .version ; make V=1 CC="ccache gcc" ARCH=${{ matrix.arch }} -j1 deb-pkg
+    - name: Make tar.XZ
+      working-directory: ./linux
+      run: rm -f .version ; make V=1 CC="ccache gcc" ARCH=${{ matrix.arch }} -j1 tarxz-pkg
     - name: Create GH release
       uses: actions/create-release@v1
       id: create_release
@@ -729,7 +781,7 @@ jobs:
         GITHUB_TOKEN: ${{ github.token }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: linux/rpmbuild/SRPMS/kernel-${{ env.kernel_version }}.src.rpm
+        asset_path: linux/rpmbuild/SRPMS/kernel-${{ env.kernel_version }}-1.src.rpm
         asset_name: kernel-${{ env.kernel_version }}.src.rpm
         asset_content_type: application/x-rpm
     - name: Upload headers RPM to release draft
@@ -738,7 +790,7 @@ jobs:
         GITHUB_TOKEN: ${{ github.token }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: linux/linux/rpmbuild/RPMS/${{ matrix.arch }}/kernel-headers-${{ env.kernel_version }}.${{ matrix.arch }}.rpm
+        asset_path: linux/linux/rpmbuild/RPMS/${{ matrix.arch }}/kernel-headers-${{ env.kernel_version }}-1.${{ matrix.arch }}.rpm
         asset_name: kernel-headers-${{ env.kernel_version }}.${{ matrix.arch }}.rpm
         asset_content_type: application/x-rpm
     - name: Upload kernel RPM to release draft
@@ -747,7 +799,7 @@ jobs:
         GITHUB_TOKEN: ${{ github.token }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: linux/rpmbuild/RPMS/${{ matrix.arch }}/kernel-${{ env.kernel_version }}.${{ matrix.arch }}.rpm
+        asset_path: linux/rpmbuild/RPMS/${{ matrix.arch }}/kernel-${{ env.kernel_version }}-1.${{ matrix.arch }}.rpm
         asset_name: kernel-${{ env.kernel_version }}.${{ matrix.arch }}.rpm
         asset_content_type: application/x-rpm
     - name: Upload devel RPM to release draft
@@ -756,7 +808,7 @@ jobs:
         GITHUB_TOKEN: ${{ github.token }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: linux/rpmbuild/RPMS/${{ matrix.arch }}/kernel-devel-${{ env.kernel_version }}.${{ matrix.arch }}.rpm
+        asset_path: linux/rpmbuild/RPMS/${{ matrix.arch }}/kernel-devel-${{ env.kernel_version }}-1.${{ matrix.arch }}.rpm
         asset_name: kernel-devel-${{ env.kernel_version }}.${{ matrix.arch }}.rpm
         asset_content_type: application/x-rpm
     - name: Upload tar.XZ to release draft
@@ -774,7 +826,7 @@ jobs:
         GITHUB_TOKEN: ${{ github.token }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: linux-headers-${{ env.kernel_version }}_${{ env.kernel_version }}_amd64.deb
+        asset_path: linux-headers-${{ env.kernel_version }}_${{ env.kernel_version }}-1_amd64.deb
         asset_name: linux-headers-${{ env.kernel_version }}_${{ env.kernel_version }}_amd64.deb
         asset_content_type: application/vnd.debian.binary-package
     - name: Upload kernel image DEB to release draft
@@ -783,7 +835,7 @@ jobs:
         GITHUB_TOKEN: ${{ github.token }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: linux-image-${{ env.kernel_version }}_${{ env.kernel_version }}_amd64.deb
+        asset_path: linux-image-${{ env.kernel_version }}_${{ env.kernel_version }}-1_amd64.deb
         asset_name: linux-image-${{ env.kernel_version }}_${{ env.kernel_version }}_amd64.deb
         asset_content_type: application/vnd.debian.binary-package
     - name: Upload libc dev DEB to release draft
@@ -792,6 +844,6 @@ jobs:
         GITHUB_TOKEN: ${{ github.token }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: linux-libc-dev__${{ env.kernel_version }}_amd64.deb
+        asset_path: linux-libc-dev__${{ env.kernel_version }}-1_amd64.deb
         asset_name: linux-libc-dev__${{ env.kernel_version }}_amd64.deb
         asset_content_type: application/vnd.debian.binary-package

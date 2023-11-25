@@ -1,4 +1,1 @@
-[submodule "linux"]
-	path = linux
-	url = https://github.com/torvalds/linux.git
-	branch = master
+#
