@@ -817,8 +817,8 @@ jobs:
         GITHUB_TOKEN: ${{ github.token }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: linux/linux-${{ env.kernel_version }}.${{ matrix.arch }}.tar.xz
-        asset_name: linux-${{ env.kernel_version }}.${{ matrix.arch }}.tar.xz
+        asset_path: linux/linux-${{ env.kernel_version }}-${{ matrix.arch }}.tar.xz
+        asset_name: linux-${{ env.kernel_version }}-${{ matrix.arch }}.tar.xz
         asset_content_type: application/x-xz
     - name: Upload headers DEB to release draft
       uses: actions/upload-release-asset@v1
