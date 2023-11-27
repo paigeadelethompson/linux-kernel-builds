@@ -790,7 +790,7 @@ jobs:
         GITHUB_TOKEN: ${{ github.token }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: linux/linux/rpmbuild/RPMS/${{ matrix.arch }}/kernel-headers-${{ env.kernel_version }}-1.${{ matrix.arch }}.rpm
+        asset_path: linux/rpmbuild/RPMS/${{ matrix.arch }}/kernel-headers-${{ env.kernel_version }}-1.${{ matrix.arch }}.rpm
         asset_name: kernel-headers-${{ env.kernel_version }}.${{ matrix.arch }}.rpm
         asset_content_type: application/x-rpm
     - name: Upload kernel RPM to release draft
