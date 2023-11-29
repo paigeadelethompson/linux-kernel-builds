@@ -1,16 +1,5 @@
 # Linux Kernel Builds 
-Check the releases page for the latest build. Build configuration is derived from `allmodconfig` which has an unfortunate side effect of implying an
-`allyesconfig` for options that are not modular. Many options are disabled after the configuration file is first created:
-
-- KCOV
-- KUnit
-- Tests and self tests
-- Debug and DebugFS
-- RCU expert settings
-- Most of the kernel hacking options
-- MEMTEST
-
-But these builds should include *ALL* drivers, and if anything actually is missing please cut a ticket in the issues page. 
+These builds should include *ALL* drivers, and if anything actually is missing please cut a ticket in the issues page. 
 
 ## Version
 The source code tag is specified as an environment variable in the repository configuration. For a complete list of tags: https://github.com/torvalds/linux/tags
