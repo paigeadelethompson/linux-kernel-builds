@@ -13,7 +13,7 @@ jobs:
     - name: APT update sources
       run: sudo apt-get update
     - name: APT install packages
-      run: sudo apt-get install -y git linux-image-generic libelf-dev build-essential ccache debhelper rpm clang lld
+      run: sudo apt-get install -y git linux-image-generic libelf-dev build-essential ccache debhelper rpm clang lld wget
     - name: Clone Linux kernel
       run: git clone --single-branch -b ${{ vars.GITVER_CHECKOUT }} https://github.com/torvalds/linux.git
     - name: Setup ccache
@@ -36,7 +36,7 @@ jobs:
     - name: Set custom options
       working-directory: ./linux
       run: |
-         cp ../.config .
+         wget https://raw.githubusercontent.com/paigeadelethompson/complete-linux-kernel-compile/main/.config
     - name: Make olddefconfig
       working-directory: ./linux
       run: make V=1 CC="ccache gcc" olddefconfig
