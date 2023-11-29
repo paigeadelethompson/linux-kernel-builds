@@ -1,5 +1,5 @@
 # Linux Kernel Builds 
-These builds should include *ALL* drivers, and if anything actually is missing please cut a ticket in the issues page. 
+Visit the releases page for downloads: https://github.com/paigeadelethompson/complete-linux-kernel-compile/releases
 
 ## Version
 The source code tag is specified as an environment variable in the repository configuration. For a complete list of tags: https://github.com/torvalds/linux/tags
