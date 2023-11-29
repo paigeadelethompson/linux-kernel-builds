@@ -1,0 +1,140 @@
+name: build kernel
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        arch: ["x86_64"]
+    runs-on: ubuntu-latest
+    steps:
+    - name: APT update sources
+      run: sudo apt-get update
+    - name: APT install packages
+      run: sudo apt-get install -y git linux-image-generic libelf-dev build-essential ccache debhelper rpm clang lld
+    - name: Clone Linux kernel
+      run: git clone --single-branch -b ${{ vars.GITVER_CHECKOUT }} https://github.com/torvalds/linux.git
+    - name: Setup ccache
+      uses: hendrikmuhs/ccache-action@v1.2
+    - name: Get current date
+      id: date
+      run: echo "stamp=$(date '+%s')" >> $GITHUB_ENV
+    - name: Make mrproper
+      working-directory: ./linux
+      run: make V=1 CC="ccache gcc" mrproper
+    - name: Make clean
+      working-directory: ./linux
+      run: make V=1 CC="ccache gcc" clean
+    - name: Make defconfig
+      working-directory: ./linux
+      run: make V=1 CC="ccache gcc" defconfig
+    - name: Make allmodconfig
+      working-directory: ./linux
+      run: make V=1 CC="ccache gcc" allmodconfig
+    - name: Set custom options
+      working-directory: ./linux
+      run: |
+         cp ../.config .
+    - name: Make olddefconfig
+      working-directory: ./linux
+      run: make V=1 CC="ccache gcc" olddefconfig
+    - name: Get kernel version string
+      working-directory: ./linux
+      id: version
+      run: echo "kernel_version=$(make kernelrelease)" >> $GITHUB_ENV
+    - name: Make all
+      working-directory: ./linux
+      run: make V=1 CC="ccache gcc" all
+    - name: Make RPM
+      working-directory: ./linux
+      run: rm -f .version ; make V=1 CC="ccache gcc" ARCH=${{ matrix.arch }} -j1 rpm-pkg
+    - name: Make DEB
+      working-directory: ./linux
+      run: rm -f .version ; make V=1 CC="ccache gcc" ARCH=${{ matrix.arch }} -j1 deb-pkg
+    - name: Make tar.XZ
+      working-directory: ./linux
+      run: rm -f .version ; make V=1 CC="ccache gcc" ARCH=${{ matrix.arch }} -j1 tarxz-pkg
+    - name: Create GH release
+      uses: actions/create-release@v1
+      id: create_release
+      with:
+        draft: true
+        prerelease: false
+        release_name: linux-${{ env.kernel_version }}-${{ matrix.arch }}-${{ env.stamp }}
+        tag_name: linux-${{ env.kernel_version }}-${{ matrix.arch }}-${{ env.stamp }}
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+    - name: Upload src RPM to release draft
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: linux/rpmbuild/SRPMS/kernel-${{ env.kernel_version }}-1.src.rpm
+        asset_name: kernel-${{ env.kernel_version }}.src.rpm
+        asset_content_type: application/x-rpm
+    - name: Upload headers RPM to release draft
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: linux/rpmbuild/RPMS/${{ matrix.arch }}/kernel-headers-${{ env.kernel_version }}-1.${{ matrix.arch }}.rpm
+        asset_name: kernel-headers-${{ env.kernel_version }}.${{ matrix.arch }}.rpm
+        asset_content_type: application/x-rpm
+    - name: Upload kernel RPM to release draft
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: linux/rpmbuild/RPMS/${{ matrix.arch }}/kernel-${{ env.kernel_version }}-1.${{ matrix.arch }}.rpm
+        asset_name: kernel-${{ env.kernel_version }}.${{ matrix.arch }}.rpm
+        asset_content_type: application/x-rpm
+    - name: Upload devel RPM to release draft
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: linux/rpmbuild/RPMS/${{ matrix.arch }}/kernel-devel-${{ env.kernel_version }}-1.${{ matrix.arch }}.rpm
+        asset_name: kernel-devel-${{ env.kernel_version }}.${{ matrix.arch }}.rpm
+        asset_content_type: application/x-rpm
+    - name: Upload tar.XZ to release draft
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: linux/linux-${{ env.kernel_version }}-${{ matrix.arch }}.tar.xz
+        asset_name: linux-${{ env.kernel_version }}-${{ matrix.arch }}.tar.xz
+        asset_content_type: application/x-xz
+    - name: Upload headers DEB to release draft
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: linux-headers-${{ env.kernel_version }}_${{ env.kernel_version }}-1_amd64.deb
+        asset_name: linux-headers-${{ env.kernel_version }}_${{ env.kernel_version }}_amd64.deb
+        asset_content_type: application/vnd.debian.binary-package
+    - name: Upload kernel image DEB to release draft
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: linux-image-${{ env.kernel_version }}_${{ env.kernel_version }}-1_amd64.deb
+        asset_name: linux-image-${{ env.kernel_version }}_${{ env.kernel_version }}_amd64.deb
+        asset_content_type: application/vnd.debian.binary-package
+    - name: Upload libc dev DEB to release draft
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: linux-libc-dev_${{ env.kernel_version }}-1_amd64.deb
+        asset_name: linux-libc-dev_${{ env.kernel_version }}_amd64.deb
+        asset_content_type: application/vnd.debian.binary-package
