@@ -9,6 +9,7 @@ jobs:
       matrix:
         arch: ["x86_64"]
     runs-on: ubuntu-latest
+    timeout-minutes: 720
     steps:
     - name: APT update sources
       run: sudo apt-get update
