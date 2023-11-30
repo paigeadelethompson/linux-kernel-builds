@@ -8,7 +8,7 @@ jobs:
     strategy:
       matrix:
         arch: ["x86_64"]
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     timeout-minutes: 50400
     steps:
     - name: APT update sources
