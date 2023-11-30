@@ -14,7 +14,7 @@ jobs:
     - name: APT update sources
       run: sudo apt-get update
     - name: APT install packages
-      run: sudo apt-get install -y git linux-image-generic libelf-dev build-essential ccache debhelper rpm clang lld wget
+      run: sudo apt-get install -y git linux-image-generic libelf-dev build-essential ccache debhelper rpm clang lld wget coreutils
     - name: Clone Linux kernel
       run: git clone --single-branch -b ${{ vars.GITVER_CHECKOUT }} https://github.com/torvalds/linux.git
     - name: Setup ccache
@@ -47,7 +47,7 @@ jobs:
       run: echo "kernel_version=$(make kernelrelease)" >> $GITHUB_ENV
     - name: Make all
       working-directory: ./linux
-      run: make V=1 CC="ccache gcc" all
+      run: make V=1 CC="ccache gcc" -j$(nproc) all
     - name: Make RPM
       working-directory: ./linux
       run: rm -f .version ; make V=1 CC="ccache gcc" ARCH=${{ matrix.arch }} -j1 rpm-pkg
