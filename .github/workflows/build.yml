@@ -28,12 +28,12 @@ jobs:
     - name: Make clean
       working-directory: ./linux
       run: make V=1 CC="ccache gcc" clean
-    - name: Make defconfig
-      working-directory: ./linux
-      run: make V=1 CC="ccache gcc" defconfig
-    - name: Make allmodconfig
-      working-directory: ./linux
-      run: make V=1 CC="ccache gcc" allmodconfig
+#    - name: Make defconfig
+#      working-directory: ./linux
+#      run: make V=1 CC="ccache gcc" defconfig
+#    - name: Make allmodconfig
+#      working-directory: ./linux
+#      run: make V=1 CC="ccache gcc" allmodconfig
     - name: Set custom options
       working-directory: ./linux
       run: |
