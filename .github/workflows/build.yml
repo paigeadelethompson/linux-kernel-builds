@@ -15,6 +15,8 @@ jobs:
       run: sudo apt-get update
     - name: APT install packages
       run: sudo apt-get install -y git dwarves linux-image-generic libelf-dev build-essential ccache debhelper rpm clang lld wget coreutils
+    - name: Clone this repository
+      run: git clone https://github.com/paigeadelethompson/complete-linux-kernel-compile.git config
     - name: Clone Linux kernel
       run: git clone --single-branch -b ${{ vars.GITVER_CHECKOUT }} https://github.com/torvalds/linux.git
     - name: Setup ccache
@@ -31,11 +33,7 @@ jobs:
     - name: Create kernel configuration
       working-directory: ./linux
       run: |
-        make defconfig && mv .config config.defconfig
-        make allmodconfig && mv .config config.allmodconfig
-        cat config.defconfig | grep "=y" > .config
-        find lib/ crypto/ fs/ net/ drivers/ -type f -name "Kconfig" | xargs -i grep "^menuconfig " {} | grep -vP "(DEBUG|TEST)" | awk '{print "CONFIG_"$2}' | xargs -i scripts/config -e {}
-        cat config.allmodconfig | grep "=m" >> .config
+        cp ../config/x86_64.config .config
         make olddefconfig
     - name: Set configuration options
       working-directory: ./linux
