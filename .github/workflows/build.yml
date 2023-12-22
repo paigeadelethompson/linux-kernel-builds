@@ -28,19 +28,14 @@ jobs:
     - name: Make clean
       working-directory: ./linux
       run: make V=1 CC="ccache gcc" clean
-#    - name: Make defconfig
-#      working-directory: ./linux
-#      run: make V=1 CC="ccache gcc" defconfig
-#    - name: Make allmodconfig
-#      working-directory: ./linux
-#      run: make V=1 CC="ccache gcc" allmodconfig
-    - name: Set custom options
+    - name: Create kernel configuration
       working-directory: ./linux
       run: |
-         wget https://raw.githubusercontent.com/paigeadelethompson/complete-linux-kernel-compile/main/.config
-    - name: Make olddefconfig
-      working-directory: ./linux
-      run: make V=1 CC="ccache gcc" olddefconfig
+        cat .config /boot/config-* | grep "=y" | sort | uniq > .config
+        make olddefconfig
+        scripts/config -u CONFIG_SYSTEM_TRUSTED_KEYS
+        scripts/config -u CONFIG_BUILD_SALT
+        scripts/config -u CONFIG_CC_VERSION_TEXT
     - name: Get kernel version string
       working-directory: ./linux
       id: version
