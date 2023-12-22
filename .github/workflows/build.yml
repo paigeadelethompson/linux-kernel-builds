@@ -31,11 +31,19 @@ jobs:
     - name: Create kernel configuration
       working-directory: ./linux
       run: |
-        cat .config /boot/config-* | grep "=y" | sort | uniq > .config
+        make defconfig && mv .config config.defconfig
+        make allmodconfig && mv .config config.allmodconfig
+        cat config.defconfig | grep "=y" > .config
+        find lib/ crypto/ fs/ net/ drivers/ -type f -name "Kconfig" | xargs -i grep "^menuconfig " {} | grep -vP "(DEBUG|TEST)" | awk '{print "CONFIG_"$2}' | xargs -i scripts/config -e {}
+        cat config.allmodconfig | grep "=m" >> .config
         make olddefconfig
+    - name: Set configuration options
+      working-directory: ./linux
+      run: |
         scripts/config -u CONFIG_SYSTEM_TRUSTED_KEYS
         scripts/config -u CONFIG_BUILD_SALT
         scripts/config -u CONFIG_CC_VERSION_TEXT
+        make olddefconfig
     - name: Get kernel version string
       working-directory: ./linux
       id: version
