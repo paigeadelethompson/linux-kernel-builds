@@ -40,6 +40,7 @@ jobs:
       run: |
         scripts/config -u CONFIG_SYSTEM_TRUSTED_KEYS
         scripts/config -u CONFIG_BUILD_SALT
+        scripts/config -u CONFIG_MODULE_SIG_KEY
         scripts/config -u CONFIG_CC_VERSION_TEXT
         make V=1 LLVM=1 ARCH=arm64 CC="ccache clang" olddefconfig
     - name: Get kernel version string
