@@ -1,4 +1,4 @@
-name: build kernel
+name: build ARM64 kernel
 
 on:
   workflow_dispatch:
@@ -26,38 +26,38 @@ jobs:
       run: echo "stamp=$(date '+%s')" >> $GITHUB_ENV
     - name: Make mrproper
       working-directory: ./linux
-      run: make V=1 CC="ccache gcc" mrproper
+      run: make V=1 LLVM=1 ARCH=arm64 CC="ccache clang" mrproper
     - name: Make clean
       working-directory: ./linux
-      run: make V=1 CC="ccache gcc" clean
+      run: make V=1 LLVM=1 ARCH=arm64 CC="ccache clang" clean
     - name: Create kernel configuration
       working-directory: ./linux
       run: |
         cp ../config/x86_64.config .config
-        make olddefconfig
+        make V=1 LLVM=1 ARCH=arm64 CC="ccache clang" olddefconfig
     - name: Set configuration options
       working-directory: ./linux
       run: |
         scripts/config -u CONFIG_SYSTEM_TRUSTED_KEYS
         scripts/config -u CONFIG_BUILD_SALT
         scripts/config -u CONFIG_CC_VERSION_TEXT
-        make olddefconfig
+        make V=1 LLVM=1 ARCH=arm64 CC="ccache clang" olddefconfig
     - name: Get kernel version string
       working-directory: ./linux
       id: version
       run: echo "kernel_version=$(make kernelrelease)" >> $GITHUB_ENV
     - name: Make all
       working-directory: ./linux
-      run: make V=1 CC="ccache gcc" -j$(nproc) all
+      run: make V=1 LLVM=1 ARCH=arm64 CC="ccache clang" -j$(nproc) all
     - name: Make RPM
       working-directory: ./linux
-      run: rm -f .version ; make V=1 CC="ccache gcc" ARCH=${{ matrix.arch }} -j1 rpm-pkg
+      run: rm -f .version ; make V=1 LLVM=1 ARCH=arm64 CC="ccache clang" ARCH=${{ matrix.arch }} -j1 rpm-pkg
     - name: Make DEB
       working-directory: ./linux
-      run: rm -f .version ; make V=1 CC="ccache gcc" ARCH=${{ matrix.arch }} -j1 deb-pkg
+      run: rm -f .version ; make V=1 LLVM=1 ARCH=arm64 CC="ccache clang" ARCH=${{ matrix.arch }} -j1 deb-pkg
     - name: Make tar.XZ
       working-directory: ./linux
-      run: rm -f .version ; make V=1 CC="ccache gcc" ARCH=${{ matrix.arch }} -j1 tarxz-pkg
+      run: rm -f .version ; make V=1 LLVM=1 ARCH=arm64 CC="ccache clang" ARCH=${{ matrix.arch }} -j1 tarxz-pkg
     - name: Create GH release
       uses: actions/create-release@v1
       id: create_release
