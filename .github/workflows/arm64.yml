@@ -14,7 +14,7 @@ jobs:
     - name: APT update sources
       run: sudo apt-get update
     - name: APT install packages
-      run: sudo apt-get install -y git dwarves linux-image-generic libelf-dev build-essential ccache debhelper rpm clang lld wget coreutils
+      run: sudo apt-get install -y git dwarves linux-image-generic libelf-dev build-essential ccache debhelper rpm clang llvm lld wget coreutils
     - name: Clone this repository
       run: git clone https://github.com/paigeadelethompson/complete-linux-kernel-compile.git config
     - name: Clone Linux kernel
