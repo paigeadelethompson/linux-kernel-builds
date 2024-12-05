@@ -1,3 +1,6 @@
+# Shelved
+Check out https://github.com/Ravenhammer-Research/void-uconsole?tab=readme-ov-file#linux-kernel-source for a better example of how to go about this 
+
 # Linux Kernel Builds 
 Visit the releases page for downloads: https://github.com/paigeadelethompson/complete-linux-kernel-compile/releases
 
